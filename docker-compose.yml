@@ -16,6 +16,8 @@ services:
       - postgres
     networks:
       - mynetwork
+    volumes:
+      - ./logs:/app/logs
 
   postgres:
     image: postgres
