@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OficinaMotocenter.Application\OficinaMotocenter.Application.csproj" />
+    <ProjectReference Include="..\OficinaMotocenter.Persistence\OficinaMotocenter.Persistence.csproj" />
   </ItemGroup>
 
 </Project>
