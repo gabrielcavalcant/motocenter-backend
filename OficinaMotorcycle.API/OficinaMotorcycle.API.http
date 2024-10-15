@@ -1,0 +1,6 @@
+@OficinaMotorcycle.API_HostAddress = http://localhost:5013
+
+GET {{OficinaMotorcycle.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
