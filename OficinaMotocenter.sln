@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34511.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{3EC25CAC-295A-4CF4-990D-4625F05E8CDA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{BAB70CE9-EB50-4ABC-A4A1-3E22615864D8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CrossCutting", "CrossCutting", "{F0215E21-C082-445A-BE88-86BFB0F15782}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{B956F1CD-D0B1-46C4-B4BE-B42537D6C8D7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{B8901F8B-00F0-4077-8C3C-70D1195A9B91}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OficinaMotocenter.Domain", "OficinaMotocenter.Domain\OficinaMotocenter.Domain.csproj", "{ED9A9645-E291-4B5D-87FC-C838DD3D97A0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OficinaMotocenter.Application", "OficinaMotocenter.Application\OficinaMotocenter.Application.csproj", "{4105941B-20B1-4AAB-AD06-4F1B6632D80C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OficinaMotocenter.CrossCutting", "OficinaMotocenter.CrossCutting\OficinaMotocenter.CrossCutting.csproj", "{ACB8F4A0-2FDD-4D7F-AEE5-A0CA6CB7F01B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OficinaMotocenter.Persistence", "OficinaMotocenter.Persistence\OficinaMotocenter.Persistence.csproj", "{67E49D1A-D5DF-424A-A0B0-7E5040E4639B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ED9A9645-E291-4B5D-87FC-C838DD3D97A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED9A9645-E291-4B5D-87FC-C838DD3D97A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED9A9645-E291-4B5D-87FC-C838DD3D97A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED9A9645-E291-4B5D-87FC-C838DD3D97A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4105941B-20B1-4AAB-AD06-4F1B6632D80C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4105941B-20B1-4AAB-AD06-4F1B6632D80C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4105941B-20B1-4AAB-AD06-4F1B6632D80C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4105941B-20B1-4AAB-AD06-4F1B6632D80C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACB8F4A0-2FDD-4D7F-AEE5-A0CA6CB7F01B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACB8F4A0-2FDD-4D7F-AEE5-A0CA6CB7F01B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACB8F4A0-2FDD-4D7F-AEE5-A0CA6CB7F01B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACB8F4A0-2FDD-4D7F-AEE5-A0CA6CB7F01B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67E49D1A-D5DF-424A-A0B0-7E5040E4639B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67E49D1A-D5DF-424A-A0B0-7E5040E4639B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67E49D1A-D5DF-424A-A0B0-7E5040E4639B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67E49D1A-D5DF-424A-A0B0-7E5040E4639B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{ED9A9645-E291-4B5D-87FC-C838DD3D97A0} = {3EC25CAC-295A-4CF4-990D-4625F05E8CDA}
+		{4105941B-20B1-4AAB-AD06-4F1B6632D80C} = {3EC25CAC-295A-4CF4-990D-4625F05E8CDA}
+		{ACB8F4A0-2FDD-4D7F-AEE5-A0CA6CB7F01B} = {F0215E21-C082-445A-BE88-86BFB0F15782}
+		{67E49D1A-D5DF-424A-A0B0-7E5040E4639B} = {B956F1CD-D0B1-46C4-B4BE-B42537D6C8D7}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4530EF55-58F4-4340-B3DC-B07020059045}
+	EndGlobalSection
+EndGlobal
