@@ -32,18 +32,64 @@ namespace OficinaMotocenter.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<CreateMotorcycleResponse> CreateMotorcycleAsync(CreateMotorcycleRequest dto)
+        /// <summary>
+        /// Executes the creation of a new motorcycle.
+        /// </summary>
+        /// <param name="dto">The request DTO containing motorcycle information.</param>
+        /// <returns>A response DTO with the details of the created motorcycle.</returns>
+        public async Task<CreateMotorcycleResponse> CreateMotorcycleAsync(CreateMotorcycleRequest request)
         {
-            Motorcycle motorcycle = _mapper.Map<Motorcycle>(dto);
+            Motorcycle motorcycle = _mapper.Map<Motorcycle>(request);
             _logger.LogInformation("Creating motorcycle: {@motorcycle}", motorcycle);
             Motorcycle createdMotorcycle = await base.CreateAsync(motorcycle);
             return _mapper.Map<CreateMotorcycleResponse>(createdMotorcycle);
         }
 
-        public async Task<GetMotorcycleByIdResponse> GetMotorcycleByIdAsync(Guid id)
+        /// <summary>
+        /// Executes the retrieval of a motorcycle by its ID.
+        /// </summary>
+        /// <param name="motorcycleId">The unique ID of the motorcycle to retrieve.</param>
+        /// <returns>A response DTO with the details of the motorcycle.</returns>
+        public async Task<GetMotorcycleByIdResponse> GetMotorcycleByIdAsync(Guid motorcycleId)
         {
-            Motorcycle motorcycle = await base.GetByIdAsync(id);
+            _logger.LogInformation("Searching motorcycle using GUID: {@id}", motorcycleId);
+            Motorcycle motorcycle = await base.GetByIdAsync(motorcycleId);
             return _mapper.Map<GetMotorcycleByIdResponse>(motorcycle);
+        }
+
+        /// <summary>
+        /// Executes the retrieval of all motorcycles with optional filtering.
+        /// </summary>
+        /// <param name="request">The request DTO containing filtering information.</param>
+        /// <returns>A response DTO with the list of motorcycles and pagination details.</returns>
+        public async Task<GetListMotorcycleResponse> GetListMotorcycleAsync(GetListMotorcycleRequest request)
+        {
+            _logger.LogInformation("Get motorcycle list using: {@request}", request);
+
+            IList<Motorcycle> motorcycleList = await base.GetAllAsync(
+                filter: m => (string.IsNullOrEmpty(request.Name) || m.Name.Contains(request.Name)) &&
+                             (string.IsNullOrEmpty(request.Plate) || m.Plate.Contains(request.Plate)),
+                skip: (request.PageIndex - 1) * request.PageSize,
+                take: request.PageSize
+            );
+            GetListMotorcycleResponse response = _mapper.Map<GetListMotorcycleResponse>(motorcycleList);
+            response.TotalCount = motorcycleList.Count;
+            return response;
+        }
+
+        public async Task<UpdateMotorcycleResponse> UpdateMotorcycleAsync(Guid motorcycleId, UpdateMotorcycleRequest request)
+        {
+            Motorcycle motorcycle = await base.GetByIdAsync(motorcycleId);
+            _mapper.Map(request, motorcycle);
+            Motorcycle updatedMotorcycle = await base.UpdateAsync(motorcycle);
+            UpdateMotorcycleResponse response = _mapper.Map<UpdateMotorcycleResponse>(updatedMotorcycle);
+            return response;
+        }
+
+        public async Task<bool> DeleteMotorcycleAsync(Guid motorcycleId)
+        {
+            bool motorcycleDeleted = await base.DeleteAsync(motorcycleId);
+            return motorcycleDeleted;
         }
     }
 }
