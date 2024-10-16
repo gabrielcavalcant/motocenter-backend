@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using OficinaMotocenter.Application.Dto.Requests.Motorcycle;
 using OficinaMotocenter.Application.Dto.Responses.Motorcycle;
 using OficinaMotocenter.Domain.Entities;
-using OficinaMotocenter.Domain.Interfaces.Services;
+using OficinaMotocenter.Application.Interfaces.Services;
 
 namespace OficinaMotorcycle.API.Controllers
 {
@@ -43,13 +43,7 @@ namespace OficinaMotorcycle.API.Controllers
         {
             _logger.LogInformation("Request initiated");
 
-            Motorcycle motorcycle = _mapper.Map<Motorcycle>(dto);
-
-            _logger.LogInformation("Create Motorcycle initiated");
-            Motorcycle motorcycleCreated = await _motorcycleService.CreateAsync(motorcycle);
-
-            _logger.LogInformation("Converting Motorcycle in response");
-            CreateMotorcycleResponse response = _mapper.Map<CreateMotorcycleResponse>(motorcycleCreated);
+            CreateMotorcycleResponse response = await _motorcycleService.CreateMotorcycleAsync(dto);
 
             _logger.LogInformation("Response: {@response}", response);
             return CreatedAtAction(nameof(Get), new { id = response.MotorcycleId }, response);
@@ -63,10 +57,8 @@ namespace OficinaMotorcycle.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            Motorcycle motorcycle = await _motorcycleService.GetByIdAsync(id);
-            
-            GetMotorcycleByIdResponse response = _mapper.Map<GetMotorcycleByIdResponse>(motorcycle);
-            
+            GetMotorcycleByIdResponse response = await _motorcycleService.GetMotorcycleByIdAsync(id);
+
             if (response == null)
                 return NotFound();
 

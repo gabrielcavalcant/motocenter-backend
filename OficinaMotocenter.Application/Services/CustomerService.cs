@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using OficinaMotocenter.Domain.Entities;
 using OficinaMotocenter.Domain.Interfaces.Repositories;
-using OficinaMotocenter.Domain.Interfaces.Services;
+using OficinaMotocenter.Application.Interfaces.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

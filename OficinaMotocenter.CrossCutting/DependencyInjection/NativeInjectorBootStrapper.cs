@@ -7,7 +7,7 @@ using OficinaMotocenter.Application.Services;
 using OficinaMotocenter.Application.Validation.Customer;
 using OficinaMotocenter.Application.Validation.Motorcycle;
 using OficinaMotocenter.Domain.Interfaces.Repositories;
-using OficinaMotocenter.Domain.Interfaces.Services;
+using OficinaMotocenter.Application.Interfaces.Services;
 using OficinaMotocenter.Persistence.Context;
 using OficinaMotocenter.Persistence.Repositories;
 

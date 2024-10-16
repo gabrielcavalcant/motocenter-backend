@@ -1,6 +1,6 @@
 ﻿using OficinaMotocenter.Domain.Entities;
 
-namespace OficinaMotocenter.Domain.Interfaces.Services
+namespace OficinaMotocenter.Application.Interfaces.Services
 {
     /// <summary>
     /// Defines a service interface for performing CRUD operations and business logic related to customers.

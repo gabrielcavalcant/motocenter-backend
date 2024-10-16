@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OficinaMotocenter.Domain.Interfaces.Repositories;
-using OficinaMotocenter.Domain.Interfaces.Services;
+using OficinaMotocenter.Application.Interfaces.Services;
 using System.Linq.Expressions;
 
 namespace OficinaMotocenter.Application.Services

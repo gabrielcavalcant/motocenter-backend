@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace OficinaMotocenter.Domain.Interfaces.Services
+namespace OficinaMotocenter.Application.Interfaces.Services
 {
     /// <summary>
     /// Defines a generic service interface for performing CRUD operations and business logic.
