@@ -24,6 +24,8 @@ namespace OficinaMotocenter.Application.Services
         /// </summary>
         /// <param name="motorcycleRepository">The repository for motorcycle operations.</param>
         /// <param name="logger">The logger instance for logging service operations.</param>
+        /// <param name="mapper">The auto mapper instance for mapping object operations.</param>
+
         public MotorcycleService(IMotorcycleRepository motorcycleRepository, ILogger<MotorcycleService> logger, IMapper mapper)
             : base(motorcycleRepository, logger)
         {

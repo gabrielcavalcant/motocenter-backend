@@ -1,4 +1,3 @@
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using OficinaMotocenter.Application.Dto.Requests.Motorcycle;
 using OficinaMotocenter.Application.Dto.Responses.Motorcycle;
@@ -23,7 +22,7 @@ namespace OficinaMotorcycle.API.Controllers
         /// <param name="logger">Logger for logging information.</param>
         public MotorcycleController(
 
-            IMotorcycleService motorcycleService, IMapper mapper, ILogger<MotorcycleController> logger)
+            IMotorcycleService motorcycleService, ILogger<MotorcycleController> logger)
         {
             _motorcycleService = motorcycleService;
             _logger = logger;
@@ -67,7 +66,7 @@ namespace OficinaMotorcycle.API.Controllers
         /// <param name="request">The request object for retrieving all motorcycles.</param>
         /// <returns>A list of motorcycles.</returns>
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] GetListMotorcycleRequest request)
+        public async Task<IActionResult> GetList([FromQuery] GetListMotorcycleRequest request)
         {
             GetListMotorcycleResponse response = await _motorcycleService.GetListMotorcycleAsync(request);
             if (response == null)

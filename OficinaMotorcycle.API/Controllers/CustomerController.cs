@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OficinaMotocenter.Application.Dto.Requests.Customer;
 using OficinaMotocenter.Application.Dto.Responses.Customer;
 using OficinaMotocenter.Application.Interfaces.Services;
@@ -43,7 +42,7 @@ namespace OficinaMotorcycle.API.Controllers
             CreateCustomerResponse response = await _customerService.CreateCustomerAsync(request);
 
             _logger.LogInformation("Response: {@response}", response);
-            return CreatedAtAction(nameof(Get), new { id = response.CustomerId }, response);
+            return CreatedAtAction(nameof(Get), new { customerId = response.CustomerId }, response);
         }
 
         /// <summary>
@@ -68,7 +67,7 @@ namespace OficinaMotorcycle.API.Controllers
         /// <param name="request">The request object for retrieving a customer list.</param>
         /// <returns>A list of customers.</returns>
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] GetListCustomerRequest request)
+        public async Task<IActionResult> GetList([FromQuery] GetListCustomerRequest request)
         {
             GetListCustomerResponse response = await _customerService.GetListCustomerAsync(request);
             if (response == null)
@@ -83,7 +82,7 @@ namespace OficinaMotorcycle.API.Controllers
         /// <param name="customerId">The ID of the customer to update.</param>
         /// <param name="request">The customer data transfer object containing updated details.</param>
         /// <returns>The updated customer response.</returns>
-        [HttpPut("{customerId}")]
+        [HttpPatch("{customerId}")]
         public async Task<IActionResult> Put(Guid customerId, [FromBody] UpdateCustomerRequest request)
         {
             UpdateCustomerResponse response = await _customerService.UpdateCustomerAsync(customerId, request);
