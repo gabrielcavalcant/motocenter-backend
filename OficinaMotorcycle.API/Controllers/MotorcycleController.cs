@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using OficinaMotocenter.Application.Dto.Requests.Motorcycle;
 using OficinaMotocenter.Application.Dto.Responses.Motorcycle;
 using OficinaMotocenter.Application.Interfaces.Services;
-using OficinaMotocenter.Domain.Entities;
 
 namespace OficinaMotorcycle.API.Controllers
 {
@@ -16,20 +15,17 @@ namespace OficinaMotorcycle.API.Controllers
     {
         private readonly ILogger<MotorcycleController> _logger;
         private readonly IMotorcycleService _motorcycleService;
-        private readonly IMapper _mapper;
 
         /// <summary>
         /// Constructor for dependency injection.
         /// </summary>
         /// <param name="motorcycleService">Service to manage motorcycle operations.</param>
-        /// <param name="mapper">Mapper for DTO to entity conversion.</param>
         /// <param name="logger">Logger for logging information.</param>
         public MotorcycleController(
 
             IMotorcycleService motorcycleService, IMapper mapper, ILogger<MotorcycleController> logger)
         {
             _motorcycleService = motorcycleService;
-            _mapper = mapper;
             _logger = logger;
         }
 
