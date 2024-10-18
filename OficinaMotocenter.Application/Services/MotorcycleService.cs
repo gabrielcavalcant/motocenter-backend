@@ -18,6 +18,7 @@ namespace OficinaMotocenter.Application.Services
         private readonly IMotorcycleRepository _motorcycleRepository;
         private readonly ILogger<MotorcycleService> _logger;
         private readonly IMapper _mapper;
+        private readonly ICustomerService _customerService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MotorcycleService"/> class.
@@ -26,12 +27,16 @@ namespace OficinaMotocenter.Application.Services
         /// <param name="logger">The logger instance for logging service operations.</param>
         /// <param name="mapper">The auto mapper instance for mapping object operations.</param>
 
-        public MotorcycleService(IMotorcycleRepository motorcycleRepository, ILogger<MotorcycleService> logger, IMapper mapper)
-            : base(motorcycleRepository, logger)
+        public MotorcycleService(IMotorcycleRepository motorcycleRepository, 
+                                 ILogger<MotorcycleService> logger, 
+                                 IMapper mapper, 
+                                 ICustomerService customerService)
+                                 : base(motorcycleRepository, logger)
         {
             _motorcycleRepository = motorcycleRepository;
             _logger = logger;
             _mapper = mapper;
+            _customerService = customerService;
         }
 
         /// <summary>
@@ -41,7 +46,17 @@ namespace OficinaMotocenter.Application.Services
         /// <returns>A response DTO with the details of the created motorcycle.</returns>
         public async Task<CreateMotorcycleResponse> CreateMotorcycleAsync(CreateMotorcycleRequest request)
         {
+            Customer customer = await _customerService.GetCustomerByCpfAsync(request.CustomerCpf);
+
+            if (customer == null)
+            {
+                _logger.LogWarning("CPF not found", request.CustomerCpf);
+                throw new Exception("Client not found");
+            }
+
             Motorcycle motorcycle = _mapper.Map<Motorcycle>(request);
+            motorcycle.CustomerId = customer.CustomerId;
+
             _logger.LogInformation("Creating motorcycle: {@motorcycle}", motorcycle);
             Motorcycle createdMotorcycle = await base.CreateAsync(motorcycle);
             return _mapper.Map<CreateMotorcycleResponse>(createdMotorcycle);

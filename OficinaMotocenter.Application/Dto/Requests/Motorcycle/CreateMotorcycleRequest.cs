@@ -26,5 +26,10 @@ namespace OficinaMotocenter.Application.Dto.Requests.Motorcycle
         /// The year the motorcycle was manufactured.
         /// </summary>
         public int YearManufacture { get; set; }
+
+        /// <summary>
+        /// The customer owner C    pf.
+        /// </summary>
+        public string CustomerCpf { get; set; }
     }
 }
