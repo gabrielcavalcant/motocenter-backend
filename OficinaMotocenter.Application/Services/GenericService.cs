@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using OficinaMotocenter.Domain.Interfaces.Repositories;
 using OficinaMotocenter.Application.Interfaces.Services;
 using System.Linq.Expressions;
+using OficinaMotocenter.Domain.Interfaces.UnitOfWork;
 
 namespace OficinaMotocenter.Application.Services
 {
@@ -13,6 +14,7 @@ namespace OficinaMotocenter.Application.Services
     public class GenericService<T> : IGenericService<T> where T : class
     {
         private readonly IGenericRepository<T> _genericRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<GenericService<T>> _logger;
 
         /// <summary>
@@ -20,9 +22,10 @@ namespace OficinaMotocenter.Application.Services
         /// </summary>
         /// <param name="genericRepository">The generic repository for the entity type.</param>
         /// <param name="logger">The logger instance for logging service operations.</param>
-        public GenericService(IGenericRepository<T> genericRepository, ILogger<GenericService<T>> logger)
+        public GenericService(IGenericRepository<T> genericRepository,IUnitOfWork unitOfWork, ILogger<GenericService<T>> logger)
         {
             _genericRepository = genericRepository;
+            _unitOfWork = unitOfWork;
             _logger = logger;
         }
 
@@ -103,6 +106,7 @@ namespace OficinaMotocenter.Application.Services
         {
             _logger.LogInformation("Creating a new entity of type {EntityType}.", typeof(T).Name);
             await _genericRepository.AddAsync(entity);
+            await _unitOfWork.Commit();
             _logger.LogInformation("Successfully created entity of type {EntityType}.", typeof(T).Name);
             return entity;
         }
@@ -116,6 +120,7 @@ namespace OficinaMotocenter.Application.Services
         {
             _logger.LogInformation("Updating entity of type {EntityType}.", typeof(T).Name);
             await _genericRepository.UpdateAsync(updatedEntity);
+            await _unitOfWork.Commit();
             _logger.LogInformation("Successfully updated entity of type {EntityType}.", typeof(T).Name);
             return updatedEntity;
         }
@@ -129,6 +134,7 @@ namespace OficinaMotocenter.Application.Services
         {
             _logger.LogInformation("Attempting to delete entity of type {EntityType} with ID {EntityId}.", typeof(T).Name, entityId);
             await _genericRepository.DeleteAsync(entityId);
+            await _unitOfWork.Commit();
             _logger.LogInformation("Successfully deleted entity of type {EntityType} with ID {EntityId}.", typeof(T).Name, entityId);
             return true;
         }

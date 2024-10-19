@@ -23,7 +23,7 @@ var app = builder.Build();
 // Aplica as migrações automaticamente ao subir a aplicação
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>(); // Substitua "SeuDbContext" pelo nome do seu contexto de banco de dados
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     dbContext.Database.Migrate();  // Aplica as migrações pendentes
 }
 

@@ -10,6 +10,8 @@ using OficinaMotocenter.Domain.Interfaces.Repositories;
 using OficinaMotocenter.Application.Interfaces.Services;
 using OficinaMotocenter.Persistence.Context;
 using OficinaMotocenter.Persistence.Repositories;
+using OficinaMotocenter.Domain.Interfaces.UnitOfWork;
+using OficinaMotocenter.Persistence.UnitOfWork;
 
 namespace OficinaMotocenter.CrossCutting.DependencyInjection
 {
@@ -20,6 +22,8 @@ namespace OficinaMotocenter.CrossCutting.DependencyInjection
             // Contexto do EF Core
             services.AddDbContext<AppDbContext>(options =>
                 options.UseNpgsql(connectionString));
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             // Repositórios
             services.AddScoped<IMotorcycleRepository, MotorcycleRepository>();

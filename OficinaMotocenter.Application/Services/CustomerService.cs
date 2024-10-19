@@ -5,6 +5,7 @@ using OficinaMotocenter.Application.Interfaces.Services;
 using AutoMapper;
 using OficinaMotocenter.Application.Dto.Responses.Customer;
 using OficinaMotocenter.Application.Dto.Requests.Customer;
+using OficinaMotocenter.Domain.Interfaces.UnitOfWork;
 
 namespace OficinaMotocenter.Application.Services
 {
@@ -17,6 +18,7 @@ namespace OficinaMotocenter.Application.Services
         private readonly ICustomerRepository _customerRepository;
         private readonly ILogger<CustomerService> _logger;
         private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomerService"/> class.
@@ -24,12 +26,13 @@ namespace OficinaMotocenter.Application.Services
         /// <param name="customerRepository">The repository for customer operations.</param>
         /// <param name="logger">The logger instance for logging service operations.</param>
         /// <param name="mapper">The auto mapper instance for mapping object operations.</param>
-        public CustomerService(ICustomerRepository customerRepository, ILogger<CustomerService> logger, IMapper mapper)
-            : base(customerRepository, logger)
+        public CustomerService(ICustomerRepository customerRepository, ILogger<CustomerService> logger, IMapper mapper, IUnitOfWork unitOfWork)
+            : base(customerRepository, unitOfWork, logger)
         {
             _customerRepository = customerRepository;
             _logger = logger;
             _mapper = mapper;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>

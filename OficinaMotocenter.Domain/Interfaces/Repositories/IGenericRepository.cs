@@ -40,10 +40,10 @@
         /// <returns>A task that represents the asynchronous operation.</returns>
         Task DeleteAsync(Guid id);
 
-        /// <summary>
-        /// Asynchronously saves all changes made to the repository.
-        /// </summary>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        Task SaveChangesAsync();
+        ///// <summary>
+        ///// Asynchronously saves all changes made to the repository.
+        ///// </summary>
+        ///// <returns>A task that represents the asynchronous operation.</returns>
+        //Task SaveChangesAsync();
     }
 }

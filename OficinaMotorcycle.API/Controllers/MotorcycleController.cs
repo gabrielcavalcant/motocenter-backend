@@ -46,9 +46,15 @@ namespace OficinaMotorcycle.API.Controllers
                 _logger.LogInformation("Response: {@response}", response);
                 return CreatedAtAction(nameof(Get), new { id = response.MotorcycleId }, response);
             }
-            catch(InvalidArgumentException ex)
+            catch (InvalidArgumentException ex)
             {
-                //return Content(System.Net.HttpStatusCode.InternalServerError, new { ex.Message, ex.StackTrace });
+                _logger.LogError(ex, "Invalid argument provided: {Message}", ex.Message);
+                return NotFound(new { Message = ex.Message, StackTrace = ex.StackTrace });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An unexpected error occurred: {Message}", ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new { Message = "An unexpected error occurred." });
             }
 
 

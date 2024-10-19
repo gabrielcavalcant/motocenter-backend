@@ -5,6 +5,8 @@ using Microsoft.Extensions.Logging;
 using OficinaMotocenter.Application.Dto.Requests.Motorcycle;
 using OficinaMotocenter.Application.Dto.Responses.Motorcycle;
 using AutoMapper;
+using OficinaMotocenter.Domain.Interfaces.UnitOfWork;
+using OficinaMotocenter.Application.Exceptions;
 
 
 namespace OficinaMotocenter.Application.Services
@@ -19,6 +21,7 @@ namespace OficinaMotocenter.Application.Services
         private readonly ILogger<MotorcycleService> _logger;
         private readonly IMapper _mapper;
         private readonly ICustomerService _customerService;
+        private readonly IUnitOfWork _unitOfWork;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MotorcycleService"/> class.
@@ -30,13 +33,15 @@ namespace OficinaMotocenter.Application.Services
         public MotorcycleService(IMotorcycleRepository motorcycleRepository, 
                                  ILogger<MotorcycleService> logger, 
                                  IMapper mapper, 
-                                 ICustomerService customerService)
-                                 : base(motorcycleRepository, logger)
+                                 ICustomerService customerService,
+                                 IUnitOfWork unitOfWork)
+                                 : base(motorcycleRepository,unitOfWork, logger)
         {
             _motorcycleRepository = motorcycleRepository;
             _logger = logger;
             _mapper = mapper;
             _customerService = customerService;
+            _unitOfWork = unitOfWork;
         }
 
         /// <summary>
@@ -51,7 +56,7 @@ namespace OficinaMotocenter.Application.Services
             if (customer == null)
             {
                 _logger.LogWarning("CPF not found", request.CustomerCpf);
-                throw new Exception("Client not found");
+                throw new InvalidArgumentException("Client not found");
             }
 
             Motorcycle motorcycle = _mapper.Map<Motorcycle>(request);

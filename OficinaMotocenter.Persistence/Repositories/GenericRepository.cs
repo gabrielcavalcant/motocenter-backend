@@ -51,7 +51,6 @@ namespace OficinaMotocenter.Persistence.Repositories
         {
             entity.DateCreated = DateTimeOffset.UtcNow;
             await _dbSet.AddAsync(entity);
-            await _context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -62,7 +61,6 @@ namespace OficinaMotocenter.Persistence.Repositories
         {
             entity.DateUpdated = DateTimeOffset.UtcNow;
             _dbSet.Update(entity);
-            await _context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -76,16 +74,7 @@ namespace OficinaMotocenter.Persistence.Repositories
             {
                 entity.DateDeleted = DateTimeOffset.UtcNow; // Marking as soft-deleted
                 _dbSet.Update(entity);
-                await _context.SaveChangesAsync();
             }
-        }
-
-        /// <summary>
-        /// Saves the changes made in the database context.
-        /// </summary>
-        public async Task SaveChangesAsync()
-        {
-            await _context.SaveChangesAsync();
         }
     }
 }
