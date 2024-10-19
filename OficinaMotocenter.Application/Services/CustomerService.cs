@@ -26,6 +26,8 @@ namespace OficinaMotocenter.Application.Services
         /// <param name="customerRepository">The repository for customer operations.</param>
         /// <param name="logger">The logger instance for logging service operations.</param>
         /// <param name="mapper">The auto mapper instance for mapping object operations.</param>
+        /// <param name="unitOfWork">The unit of work for customer operations.</param>
+
         public CustomerService(ICustomerRepository customerRepository, ILogger<CustomerService> logger, IMapper mapper, IUnitOfWork unitOfWork)
             : base(customerRepository, unitOfWork, logger)
         {
@@ -39,6 +41,7 @@ namespace OficinaMotocenter.Application.Services
         /// Retrieves a customer by their CPF asynchronously.
         /// </summary>
         /// <param name="cpf">The CPF of the customer to retrieve.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>The customer entity, or null if not found.</returns>
         public async Task<Customer> GetCustomerByCpfAsync(string cpf, CancellationToken cancellationToken)
         {
@@ -49,6 +52,7 @@ namespace OficinaMotocenter.Application.Services
         /// Executes the creation of a new customer.
         /// </summary>
         /// <param name="request">The request DTO containing customer information.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A response DTO with the details of the created customer.</returns>
         public async Task<CreateCustomerResponse> CreateCustomerAsync(CreateCustomerRequest request, CancellationToken cancellationToken)
         {
@@ -62,6 +66,7 @@ namespace OficinaMotocenter.Application.Services
         /// Executes the retrieval of a customer by its ID.
         /// </summary>
         /// <param name="customerId">The unique ID of the customer to retrieve.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A response DTO with the details of the customer.</returns>
         public async Task<GetCustomerByIdResponse> GetCustomerByIdAsync(Guid customerId, CancellationToken cancellationToken)
         {
@@ -74,6 +79,7 @@ namespace OficinaMotocenter.Application.Services
         /// Executes the retrieval of all customers with optional filtering.
         /// </summary>
         /// <param name="request">The request DTO containing filtering information.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A response DTO with the list of customers and pagination details.</returns>
         public async Task<GetListCustomerResponse> GetListCustomerAsync(GetListCustomerRequest request, CancellationToken cancellationToken)
         {
@@ -91,6 +97,13 @@ namespace OficinaMotocenter.Application.Services
             return response;
         }
 
+        /// <summary>
+        /// Executes the update of a existent customer.
+        /// </summary>
+        /// <param name="customerId">customer Id</param>
+        /// <param name="request">The request DTO containing customer information.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A response DTO with the details of the updated customer.</returns>
         public async Task<UpdateCustomerResponse> UpdateCustomerAsync(Guid customerId, UpdateCustomerRequest request, CancellationToken cancellationToken)
         {
             Customer customer = await base.GetByIdAsync(customerId, cancellationToken);
@@ -101,6 +114,12 @@ namespace OficinaMotocenter.Application.Services
             return response;
         }
 
+        /// <summary>
+        /// Executes the soft delete of a existent customer.
+        /// </summary>
+        /// <param name="customerId">customer Id</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A boolean result</returns>
         public async Task<bool> DeleteCustomerAsync(Guid customerId, CancellationToken cancellationToken)
         {
             bool customerDeleted = await base.DeleteAsync(customerId, cancellationToken);

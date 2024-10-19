@@ -26,6 +26,7 @@ namespace OficinaMotocenter.Persistence.Repositories
         /// Retrieves a customer by their CPF.
         /// </summary>
         /// <param name="cpf">The CPF of the customer to retrieve.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>The customer corresponding to the provided CPF.</returns>
         public async Task<Customer> GetCustomerByCpfAsync(string cpf, CancellationToken cancellationToken)
         {

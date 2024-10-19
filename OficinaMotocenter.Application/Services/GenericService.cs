@@ -23,6 +23,7 @@ namespace OficinaMotocenter.Application.Services
         /// Initializes a new instance of the <see cref="GenericService{T}"/> class.
         /// </summary>
         /// <param name="genericRepository">The generic repository for the entity type.</param>
+        /// <param name="unitOfWork">The unit of work for customer operations.</param>
         /// <param name="logger">The logger instance for logging service operations.</param>
         public GenericService(IGenericRepository<T> genericRepository,IUnitOfWork unitOfWork, ILogger<GenericService<T>> logger)
         {
@@ -35,6 +36,7 @@ namespace OficinaMotocenter.Application.Services
         /// Retrieves an entity by its unique identifier asynchronously.
         /// </summary>
         /// <param name="entityId">The unique identifier of the entity to retrieve.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>The entity instance, or null if not found.</returns>
         public async Task<T> GetByIdAsync(Guid entityId, CancellationToken cancellationToken)
         {
@@ -54,6 +56,7 @@ namespace OficinaMotocenter.Application.Services
         /// <summary>
         /// Retrieves all entities based on optional filter, ordering, skip, and take parameters asynchronously.
         /// </summary>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <param name="filter">The expression filter to apply to the query.</param>
         /// <param name="orderBy">The ordering function for the query.</param>
         /// <param name="skip">The number of records to skip.</param>
@@ -104,6 +107,7 @@ namespace OficinaMotocenter.Application.Services
         /// Creates a new entity asynchronously.
         /// </summary>
         /// <param name="entity">The entity to create.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>The created entity.</returns>
         public async Task<T> CreateAsync(T entity, CancellationToken cancellationToken)
         {
@@ -118,6 +122,7 @@ namespace OficinaMotocenter.Application.Services
         /// Updates an existing entity asynchronously.
         /// </summary>
         /// <param name="updatedEntity">The updated entity to save.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>The updated entity.</returns>
         public async Task<T> UpdateAsync(T updatedEntity, CancellationToken cancellationToken)
         {
@@ -132,6 +137,7 @@ namespace OficinaMotocenter.Application.Services
         /// Deletes an entity by its unique identifier asynchronously.
         /// </summary>
         /// <param name="entityId">The unique identifier of the entity to delete.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A boolean indicating whether the entity was successfully deleted.</returns>
         public async Task<bool> DeleteAsync(Guid entityId, CancellationToken cancellationToken)
         {

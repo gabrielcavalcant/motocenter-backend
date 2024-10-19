@@ -11,10 +11,9 @@ namespace OficinaMotocenter.Persistence.UnitOfWork
     /// </summary>
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
-        private  AppDbContext _context = null;
-        private  GenericRepository<Motorcycle> motorcycleRepository = null;
-        private  GenericRepository<Customer> customerRepository = null;
-
+        private AppDbContext _context = null;
+        private GenericRepository<Motorcycle> motorcycleRepository = null;
+        private GenericRepository<Customer> customerRepository = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnitOfWork"/> class with the specified database context.
@@ -32,9 +31,12 @@ namespace OficinaMotocenter.Persistence.UnitOfWork
         /// <returns>A task representing the asynchronous operation.</returns>
         public async Task Commit(CancellationToken cancellationToken)
         {
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
+        /// <summary>
+        /// Provides access to the motorcycle repository. Initializes the repository if it hasn't been created yet.
+        /// </summary>
         public IGenericRepository<Motorcycle> MotorcycleRepository
         {
             get
@@ -46,6 +48,10 @@ namespace OficinaMotocenter.Persistence.UnitOfWork
                 return motorcycleRepository;
             }
         }
+
+        /// <summary>
+        /// Provides access to the customer repository. Initializes the repository if it hasn't been created yet.
+        /// </summary>
         public IGenericRepository<Customer> CustomerRepository
         {
             get
@@ -59,6 +65,11 @@ namespace OficinaMotocenter.Persistence.UnitOfWork
         }
 
         private bool disposed = false;
+
+        /// <summary>
+        /// Releases the resources used by the context when disposing of the Unit of Work.
+        /// </summary>
+        /// <param name="disposing">Indicates whether the resources should be disposed.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!this.disposed)
@@ -71,6 +82,9 @@ namespace OficinaMotocenter.Persistence.UnitOfWork
             this.disposed = true;
         }
 
+        /// <summary>
+        /// Disposes of the current instance and suppresses the finalizer.
+        /// </summary>
         public void Dispose()
         {
             Dispose(true);

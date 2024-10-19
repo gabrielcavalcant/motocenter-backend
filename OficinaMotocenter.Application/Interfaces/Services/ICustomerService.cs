@@ -14,6 +14,7 @@ namespace OficinaMotocenter.Application.Interfaces.Services
         /// Asynchronously retrieves a customer entity by its CPF (Cadastro de Pessoas Físicas).
         /// </summary>
         /// <param name="cpf">The CPF of the customer to retrieve.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the customer entity.</returns>
         Task<Customer> GetCustomerByCpfAsync(string cpf, CancellationToken cancellationToken);
 
@@ -21,6 +22,7 @@ namespace OficinaMotocenter.Application.Interfaces.Services
         /// Executes the creation of a new customer.
         /// </summary>
         /// <param name="request">The request DTO containing customer information.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A response DTO with the details of the created customer.</returns>
         Task<CreateCustomerResponse> CreateCustomerAsync(CreateCustomerRequest request, CancellationToken cancellationToken);
 
@@ -28,6 +30,7 @@ namespace OficinaMotocenter.Application.Interfaces.Services
         /// Executes the retrieval of a customer by its ID.
         /// </summary>
         /// <param name="customerId">The unique ID of the customer to retrieve.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A response DTO with the details of the customer.</returns>
         Task<GetCustomerByIdResponse> GetCustomerByIdAsync(Guid customerId, CancellationToken cancellationToken);
 
@@ -35,6 +38,7 @@ namespace OficinaMotocenter.Application.Interfaces.Services
         /// Executes the retrieval of all customers with optional filtering.
         /// </summary>
         /// <param name="request">The request DTO containing filtering information.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A response DTO with the list of customer and pagination details.</returns>
         Task<GetListCustomerResponse> GetListCustomerAsync(GetListCustomerRequest request, CancellationToken cancellationToken);
 
@@ -50,6 +54,7 @@ namespace OficinaMotocenter.Application.Interfaces.Services
         /// Executes the deletion of a customer by its ID.
         /// </summary>
         /// <param name="customerId">The unique ID of the customer to delete.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A boolean indicating whether the deletion was successful.</returns>
         Task<bool> DeleteCustomerAsync(Guid customerId, CancellationToken cancellationToken);
     }

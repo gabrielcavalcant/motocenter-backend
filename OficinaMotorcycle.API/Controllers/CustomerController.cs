@@ -33,6 +33,7 @@ namespace OficinaMotorcycle.API.Controllers
         /// Creates a new customer.
         /// </summary>
         /// <param name="request">The customer data transfer object containing customer details.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A created customer response along with a location header.</returns>
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CreateCustomerRequest request, CancellationToken cancellationToken)
@@ -49,6 +50,7 @@ namespace OficinaMotorcycle.API.Controllers
         /// Retrieves a customer by its ID.
         /// </summary>
         /// <param name="customerId">The ID of the customer to retrieve.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>The customer details if found; otherwise, a 404 Not Found response.</returns>
         [HttpGet("{customerId}")]
         public async Task<IActionResult> Get(Guid customerId, CancellationToken cancellationToken)
@@ -65,6 +67,7 @@ namespace OficinaMotorcycle.API.Controllers
         /// Retrieves a customer list.
         /// </summary>
         /// <param name="request">The request object for retrieving a customer list.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A list of customers.</returns>
         [HttpGet]
         public async Task<IActionResult> GetList([FromQuery] GetListCustomerRequest request, CancellationToken cancellationToken)
@@ -81,6 +84,7 @@ namespace OficinaMotorcycle.API.Controllers
         /// </summary>
         /// <param name="customerId">The ID of the customer to update.</param>
         /// <param name="request">The customer data transfer object containing updated details.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>The updated customer response.</returns>
         [HttpPatch("{customerId}")]
         public async Task<IActionResult> Put(Guid customerId, [FromBody] UpdateCustomerRequest request, CancellationToken cancellationToken)
@@ -93,6 +97,7 @@ namespace OficinaMotorcycle.API.Controllers
         /// Deletes a customer by its ID.
         /// </summary>
         /// <param name="customerId">The ID of the customer to delete.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A no-content response if successful; otherwise, a bad request response.</returns>
         [HttpDelete("{customerId}")]
         public async Task<IActionResult> Delete(Guid customerId, CancellationToken cancellationToken)
