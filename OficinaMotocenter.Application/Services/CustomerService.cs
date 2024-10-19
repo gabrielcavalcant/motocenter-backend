@@ -40,9 +40,9 @@ namespace OficinaMotocenter.Application.Services
         /// </summary>
         /// <param name="cpf">The CPF of the customer to retrieve.</param>
         /// <returns>The customer entity, or null if not found.</returns>
-        public async Task<Customer> GetCustomerByCpfAsync(string cpf)
+        public async Task<Customer> GetCustomerByCpfAsync(string cpf, CancellationToken cancellationToken)
         {
-            return await _customerRepository.GetCustomerByCpfAsync(cpf);
+            return await _customerRepository.GetCustomerByCpfAsync(cpf, cancellationToken);
         }
 
         /// <summary>
@@ -50,11 +50,11 @@ namespace OficinaMotocenter.Application.Services
         /// </summary>
         /// <param name="request">The request DTO containing customer information.</param>
         /// <returns>A response DTO with the details of the created customer.</returns>
-        public async Task<CreateCustomerResponse> CreateCustomerAsync(CreateCustomerRequest request)
+        public async Task<CreateCustomerResponse> CreateCustomerAsync(CreateCustomerRequest request, CancellationToken cancellationToken)
         {
             Customer customer = _mapper.Map<Customer>(request);
             _logger.LogInformation("Creating customer: {@customer}", customer);
-            Customer createdCustomer = await base.CreateAsync(customer);
+            Customer createdCustomer = await base.CreateAsync(customer, cancellationToken);
             return _mapper.Map<CreateCustomerResponse>(createdCustomer);
         }
 
@@ -63,10 +63,10 @@ namespace OficinaMotocenter.Application.Services
         /// </summary>
         /// <param name="customerId">The unique ID of the customer to retrieve.</param>
         /// <returns>A response DTO with the details of the customer.</returns>
-        public async Task<GetCustomerByIdResponse> GetCustomerByIdAsync(Guid customerId)
+        public async Task<GetCustomerByIdResponse> GetCustomerByIdAsync(Guid customerId, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Searching customer using GUID: {@id}", customerId);
-            Customer customer = await base.GetByIdAsync(customerId);
+            Customer customer = await base.GetByIdAsync(customerId, cancellationToken);
             return _mapper.Map<GetCustomerByIdResponse>(customer);
         }
 
@@ -75,11 +75,12 @@ namespace OficinaMotocenter.Application.Services
         /// </summary>
         /// <param name="request">The request DTO containing filtering information.</param>
         /// <returns>A response DTO with the list of customers and pagination details.</returns>
-        public async Task<GetListCustomerResponse> GetListCustomerAsync(GetListCustomerRequest request)
+        public async Task<GetListCustomerResponse> GetListCustomerAsync(GetListCustomerRequest request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Get customer list using: {@request}", request);
 
             IList<Customer> customerList = await base.GetAllAsync(
+                cancellationToken,
                 filter: m => (string.IsNullOrEmpty(request.Name) || m.Name.Contains(request.Name)) &&
                              (string.IsNullOrEmpty(request.Telephone) || m.Telephone.Contains(request.Telephone)),
                 skip: (request.PageIndex - 1) * request.PageSize,
@@ -90,19 +91,19 @@ namespace OficinaMotocenter.Application.Services
             return response;
         }
 
-        public async Task<UpdateCustomerResponse> UpdateCustomerAsync(Guid customerId, UpdateCustomerRequest request)
+        public async Task<UpdateCustomerResponse> UpdateCustomerAsync(Guid customerId, UpdateCustomerRequest request, CancellationToken cancellationToken)
         {
-            Customer customer = await base.GetByIdAsync(customerId);
+            Customer customer = await base.GetByIdAsync(customerId, cancellationToken);
             _mapper.Map(request, customer);
-            Customer updatedCustomer = await base.UpdateAsync(customer);
-            updatedCustomer = await base.GetByIdAsync(updatedCustomer.CustomerId);
+            Customer updatedCustomer = await base.UpdateAsync(customer, cancellationToken);
+            updatedCustomer = await base.GetByIdAsync(updatedCustomer.CustomerId, cancellationToken);
             UpdateCustomerResponse response = _mapper.Map<UpdateCustomerResponse>(updatedCustomer);
             return response;
         }
 
-        public async Task<bool> DeleteCustomerAsync(Guid customerId)
+        public async Task<bool> DeleteCustomerAsync(Guid customerId, CancellationToken cancellationToken)
         {
-            bool customerDeleted = await base.DeleteAsync(customerId);
+            bool customerDeleted = await base.DeleteAsync(customerId, cancellationToken);
             return customerDeleted;
         }
     }

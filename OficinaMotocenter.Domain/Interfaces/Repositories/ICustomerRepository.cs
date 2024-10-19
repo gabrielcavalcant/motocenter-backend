@@ -13,6 +13,6 @@ namespace OficinaMotocenter.Domain.Interfaces.Repositories
         /// </summary>
         /// <param name="cpf">The CPF of the customer to retrieve.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the customer entity.</returns>
-        Task<Customer> GetCustomerByCpfAsync(string cpf);
+        Task<Customer> GetCustomerByCpfAsync(string cpf, CancellationToken cancellationToken);
     }
 }

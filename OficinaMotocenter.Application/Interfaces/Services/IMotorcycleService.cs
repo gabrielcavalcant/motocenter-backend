@@ -15,21 +15,21 @@ namespace OficinaMotocenter.Application.Interfaces.Services
         /// </summary>
         /// <param name="dto">The request DTO containing motorcycle information.</param>
         /// <returns>A response DTO with the details of the created motorcycle.</returns>
-        Task<CreateMotorcycleResponse> CreateMotorcycleAsync(CreateMotorcycleRequest dto);
+        Task<CreateMotorcycleResponse> CreateMotorcycleAsync(CreateMotorcycleRequest request, CancellationToken cancellationToken);
 
         /// <summary>
         /// Executes the retrieval of a motorcycle by its ID.
         /// </summary>
         /// <param name="motorcycleId">The unique ID of the motorcycle to retrieve.</param>
         /// <returns>A response DTO with the details of the motorcycle.</returns>
-        Task<GetMotorcycleByIdResponse> GetMotorcycleByIdAsync(Guid motorcycleId);
+        Task<GetMotorcycleByIdResponse> GetMotorcycleByIdAsync(Guid motorcycleId, CancellationToken cancellationToken);
 
         /// <summary>
         /// Executes the retrieval of all motorcycles with optional filtering.
         /// </summary>
         /// <param name="request">The request DTO containing filtering information.</param>
         /// <returns>A response DTO with the list of motorcycles and pagination details.</returns>
-        Task<GetListMotorcycleResponse> GetListMotorcycleAsync(GetListMotorcycleRequest request);
+        Task<GetListMotorcycleResponse> GetListMotorcycleAsync(GetListMotorcycleRequest request, CancellationToken cancellationToken);
 
         /// <summary>
         /// Executes the update of a motorcycle by its ID.
@@ -37,14 +37,14 @@ namespace OficinaMotocenter.Application.Interfaces.Services
         /// <param name="motorcycleId">The unique ID of the motorcycle to update.</param>
         /// <param name="request">The request DTO containing the updated information.</param>
         /// <returns>A response DTO with the details of the updated motorcycle.</returns>
-        Task<UpdateMotorcycleResponse> UpdateMotorcycleAsync(Guid motorcycleId, UpdateMotorcycleRequest request);
+        Task<UpdateMotorcycleResponse> UpdateMotorcycleAsync(Guid motorcycleId, UpdateMotorcycleRequest request, CancellationToken cancellationToken);
 
         /// <summary>
         /// Executes the deletion of a motorcycle by its ID.
         /// </summary>
         /// <param name="motorcycleId">The unique ID of the motorcycle to delete.</param>
         /// <returns>A boolean indicating whether the deletion was successful.</returns>
-        Task<bool> DeleteMotorcycleAsync(Guid motorcycleId);
+        Task<bool> DeleteMotorcycleAsync(Guid motorcycleId, CancellationToken cancellationToken);
 
     }
 }

@@ -7,6 +7,7 @@ using OficinaMotocenter.Application.Dto.Responses.Motorcycle;
 using AutoMapper;
 using OficinaMotocenter.Domain.Interfaces.UnitOfWork;
 using OficinaMotocenter.Application.Exceptions;
+using System.Threading;
 
 
 namespace OficinaMotocenter.Application.Services
@@ -49,9 +50,9 @@ namespace OficinaMotocenter.Application.Services
         /// </summary>
         /// <param name="dto">The request DTO containing motorcycle information.</param>
         /// <returns>A response DTO with the details of the created motorcycle.</returns>
-        public async Task<CreateMotorcycleResponse> CreateMotorcycleAsync(CreateMotorcycleRequest request)
+        public async Task<CreateMotorcycleResponse> CreateMotorcycleAsync(CreateMotorcycleRequest request, CancellationToken cancellationToken)
         {
-            Customer customer = await _customerService.GetCustomerByCpfAsync(request.CustomerCpf);
+            Customer customer = await _customerService.GetCustomerByCpfAsync(request.CustomerCpf, cancellationToken);
 
             if (customer == null)
             {
@@ -63,7 +64,7 @@ namespace OficinaMotocenter.Application.Services
             motorcycle.CustomerId = customer.CustomerId;
 
             _logger.LogInformation("Creating motorcycle: {@motorcycle}", motorcycle);
-            Motorcycle createdMotorcycle = await base.CreateAsync(motorcycle);
+            Motorcycle createdMotorcycle = await base.CreateAsync(motorcycle, cancellationToken);
             return _mapper.Map<CreateMotorcycleResponse>(createdMotorcycle);
         }
 
@@ -72,10 +73,10 @@ namespace OficinaMotocenter.Application.Services
         /// </summary>
         /// <param name="motorcycleId">The unique ID of the motorcycle to retrieve.</param>
         /// <returns>A response DTO with the details of the motorcycle.</returns>
-        public async Task<GetMotorcycleByIdResponse> GetMotorcycleByIdAsync(Guid motorcycleId)
+        public async Task<GetMotorcycleByIdResponse> GetMotorcycleByIdAsync(Guid motorcycleId, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Searching motorcycle using GUID: {@id}", motorcycleId);
-            Motorcycle motorcycle = await base.GetByIdAsync(motorcycleId);
+            Motorcycle motorcycle = await base.GetByIdAsync(motorcycleId, cancellationToken);
             return _mapper.Map<GetMotorcycleByIdResponse>(motorcycle);
         }
 
@@ -84,33 +85,35 @@ namespace OficinaMotocenter.Application.Services
         /// </summary>
         /// <param name="request">The request DTO containing filtering information.</param>
         /// <returns>A response DTO with the list of motorcycles and pagination details.</returns>
-        public async Task<GetListMotorcycleResponse> GetListMotorcycleAsync(GetListMotorcycleRequest request)
+        public async Task<GetListMotorcycleResponse> GetListMotorcycleAsync(GetListMotorcycleRequest request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Get motorcycle list using: {@request}", request);
 
             IList<Motorcycle> motorcycleList = await base.GetAllAsync(
+                cancellationToken,
                 filter: m => (string.IsNullOrEmpty(request.Name) || m.Name.Contains(request.Name)) &&
                              (string.IsNullOrEmpty(request.Plate) || m.Plate.Contains(request.Plate)),
                 skip: (request.PageIndex - 1) * request.PageSize,
                 take: request.PageSize
             );
+
             GetListMotorcycleResponse response = _mapper.Map<GetListMotorcycleResponse>(motorcycleList);
             response.TotalCount = motorcycleList.Count;
             return response;
         }
 
-        public async Task<UpdateMotorcycleResponse> UpdateMotorcycleAsync(Guid motorcycleId, UpdateMotorcycleRequest request)
+        public async Task<UpdateMotorcycleResponse> UpdateMotorcycleAsync(Guid motorcycleId, UpdateMotorcycleRequest request, CancellationToken cancellationToken)
         {
-            Motorcycle motorcycle = await base.GetByIdAsync(motorcycleId);
+            Motorcycle motorcycle = await base.GetByIdAsync(motorcycleId, cancellationToken);
             _mapper.Map(request, motorcycle);
-            Motorcycle updatedMotorcycle = await base.UpdateAsync(motorcycle);
+            Motorcycle updatedMotorcycle = await base.UpdateAsync(motorcycle, cancellationToken);
             UpdateMotorcycleResponse response = _mapper.Map<UpdateMotorcycleResponse>(updatedMotorcycle);
             return response;
         }
 
-        public async Task<bool> DeleteMotorcycleAsync(Guid motorcycleId)
+        public async Task<bool> DeleteMotorcycleAsync(Guid motorcycleId, CancellationToken cancellationToken)
         {
-            bool motorcycleDeleted = await base.DeleteAsync(motorcycleId);
+            bool motorcycleDeleted = await base.DeleteAsync(motorcycleId, cancellationToken);
             return motorcycleDeleted;
         }
     }

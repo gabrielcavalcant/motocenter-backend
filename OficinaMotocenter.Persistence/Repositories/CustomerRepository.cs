@@ -2,6 +2,7 @@
 using OficinaMotocenter.Domain.Entities;
 using OficinaMotocenter.Domain.Interfaces.Repositories;
 using OficinaMotocenter.Persistence.Context;
+using System.Threading;
 
 namespace OficinaMotocenter.Persistence.Repositories
 {
@@ -26,7 +27,7 @@ namespace OficinaMotocenter.Persistence.Repositories
         /// </summary>
         /// <param name="cpf">The CPF of the customer to retrieve.</param>
         /// <returns>The customer corresponding to the provided CPF.</returns>
-        public async Task<Customer> GetCustomerByCpfAsync(string cpf)
+        public async Task<Customer> GetCustomerByCpfAsync(string cpf, CancellationToken cancellationToken)
         {
             return await _context.Set<Customer>().FirstOrDefaultAsync(customer => customer.Cpf == cpf);
         }

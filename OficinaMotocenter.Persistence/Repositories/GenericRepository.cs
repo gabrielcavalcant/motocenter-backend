@@ -29,7 +29,7 @@ namespace OficinaMotocenter.Persistence.Repositories
         /// </summary>
         /// <param name="id">The ID of the entity to retrieve.</param>
         /// <returns>The entity corresponding to the provided ID.</returns>
-        public async Task<T> GetByIdAsync(Guid id)
+        public async Task<T> GetByIdAsync(Guid id, CancellationToken cancellationToken)
         {
             return await _dbSet.FindAsync(id);
         }
@@ -38,7 +38,7 @@ namespace OficinaMotocenter.Persistence.Repositories
         /// Retrieves all entities that are not marked as deleted.
         /// </summary>
         /// <returns>A query that returns non-deleted entities.</returns>
-        public IQueryable<T> GetAll()
+        public IQueryable<T> GetAll(CancellationToken cancellationToken)
         {
             return _dbSet.Where(e => !e.DateDeleted.HasValue);
         }
@@ -47,7 +47,7 @@ namespace OficinaMotocenter.Persistence.Repositories
         /// Adds a new entity to the database.
         /// </summary>
         /// <param name="entity">The entity to be added.</param>
-        public async Task AddAsync(T entity)
+        public async Task AddAsync(T entity,CancellationToken cancellationToken)
         {
             entity.DateCreated = DateTimeOffset.UtcNow;
             await _dbSet.AddAsync(entity);
@@ -57,7 +57,7 @@ namespace OficinaMotocenter.Persistence.Repositories
         /// Updates an existing entity in the database.
         /// </summary>
         /// <param name="entity">The entity to be updated.</param>
-        public async Task UpdateAsync(T entity)
+        public async Task UpdateAsync(T entity, CancellationToken cancellationToken)
         {
             entity.DateUpdated = DateTimeOffset.UtcNow;
             _dbSet.Update(entity);
@@ -67,7 +67,7 @@ namespace OficinaMotocenter.Persistence.Repositories
         /// Marks an entity as deleted (soft delete).
         /// </summary>
         /// <param name="id">The ID of the entity to delete.</param>
-        public async Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id, CancellationToken cancellationToken)
         {
             var entity = await _dbSet.FindAsync(id);
             if (entity != null)

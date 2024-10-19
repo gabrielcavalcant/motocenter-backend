@@ -30,7 +30,7 @@ namespace OficinaMotocenter.Persistence.UnitOfWork
         /// </summary>
         /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task Commit()
+        public async Task Commit(CancellationToken cancellationToken)
         {
             await _context.SaveChangesAsync();
         }

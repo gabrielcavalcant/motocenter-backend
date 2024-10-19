@@ -17,7 +17,7 @@ namespace OficinaMotocenter.Domain.Interfaces.UnitOfWork
         /// </summary>
         /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        Task Commit();
+        Task Commit(CancellationToken cancellationToken);
     }
 }
 

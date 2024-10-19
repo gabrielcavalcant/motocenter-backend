@@ -15,28 +15,28 @@ namespace OficinaMotocenter.Application.Interfaces.Services
         /// </summary>
         /// <param name="cpf">The CPF of the customer to retrieve.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the customer entity.</returns>
-        Task<Customer> GetCustomerByCpfAsync(string cpf);
+        Task<Customer> GetCustomerByCpfAsync(string cpf, CancellationToken cancellationToken);
 
         /// <summary>
         /// Executes the creation of a new customer.
         /// </summary>
         /// <param name="request">The request DTO containing customer information.</param>
         /// <returns>A response DTO with the details of the created customer.</returns>
-        Task<CreateCustomerResponse> CreateCustomerAsync(CreateCustomerRequest request);
+        Task<CreateCustomerResponse> CreateCustomerAsync(CreateCustomerRequest request, CancellationToken cancellationToken);
 
         /// <summary>
         /// Executes the retrieval of a customer by its ID.
         /// </summary>
         /// <param name="customerId">The unique ID of the customer to retrieve.</param>
         /// <returns>A response DTO with the details of the customer.</returns>
-        Task<GetCustomerByIdResponse> GetCustomerByIdAsync(Guid customerId);
+        Task<GetCustomerByIdResponse> GetCustomerByIdAsync(Guid customerId, CancellationToken cancellationToken);
 
         /// <summary>
         /// Executes the retrieval of all customers with optional filtering.
         /// </summary>
         /// <param name="request">The request DTO containing filtering information.</param>
         /// <returns>A response DTO with the list of customer and pagination details.</returns>
-        Task<GetListCustomerResponse> GetListCustomerAsync(GetListCustomerRequest request);
+        Task<GetListCustomerResponse> GetListCustomerAsync(GetListCustomerRequest request, CancellationToken cancellationToken);
 
         /// <summary>
         /// Executes the update of a customer by its ID.
@@ -44,13 +44,13 @@ namespace OficinaMotocenter.Application.Interfaces.Services
         /// <param name="customerId">The unique ID of the customer to update.</param>
         /// <param name="request">The request DTO containing the updated information.</param>
         /// <returns>A response DTO with the details of the updated customer.</returns>
-        Task<UpdateCustomerResponse> UpdateCustomerAsync(Guid customerId, UpdateCustomerRequest request);
+        Task<UpdateCustomerResponse> UpdateCustomerAsync(Guid customerId, UpdateCustomerRequest request, CancellationToken cancellationToken);
 
         /// <summary>
         /// Executes the deletion of a customer by its ID.
         /// </summary>
         /// <param name="customerId">The unique ID of the customer to delete.</param>
         /// <returns>A boolean indicating whether the deletion was successful.</returns>
-        Task<bool> DeleteCustomerAsync(Guid customerId);
+        Task<bool> DeleteCustomerAsync(Guid customerId, CancellationToken cancellationToken);
     }
 }
