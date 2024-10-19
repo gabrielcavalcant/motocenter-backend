@@ -1,8 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OficinaMotocenter.Domain.Interfaces.Repositories;
-using OficinaMotocenter.Domain.Interfaces.Services;
+using OficinaMotocenter.Application.Interfaces.Services;
 using System.Linq.Expressions;
+using OficinaMotocenter.Domain.Interfaces.UnitOfWork;
+using System.Threading;
+using OficinaMotocenter.Domain.Entities;
 
 namespace OficinaMotocenter.Application.Services
 {
@@ -13,16 +16,19 @@ namespace OficinaMotocenter.Application.Services
     public class GenericService<T> : IGenericService<T> where T : class
     {
         private readonly IGenericRepository<T> _genericRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<GenericService<T>> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericService{T}"/> class.
         /// </summary>
         /// <param name="genericRepository">The generic repository for the entity type.</param>
+        /// <param name="unitOfWork">The unit of work for customer operations.</param>
         /// <param name="logger">The logger instance for logging service operations.</param>
-        public GenericService(IGenericRepository<T> genericRepository, ILogger<GenericService<T>> logger)
+        public GenericService(IGenericRepository<T> genericRepository,IUnitOfWork unitOfWork, ILogger<GenericService<T>> logger)
         {
             _genericRepository = genericRepository;
+            _unitOfWork = unitOfWork;
             _logger = logger;
         }
 
@@ -30,11 +36,12 @@ namespace OficinaMotocenter.Application.Services
         /// Retrieves an entity by its unique identifier asynchronously.
         /// </summary>
         /// <param name="entityId">The unique identifier of the entity to retrieve.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>The entity instance, or null if not found.</returns>
-        public async Task<T> GetByIdAsync(Guid entityId)
+        public async Task<T> GetByIdAsync(Guid entityId, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Attempting to retrieve entity of type {EntityType} with ID {EntityId}.", typeof(T).Name, entityId);
-            var entity = await _genericRepository.GetByIdAsync(entityId);
+            var entity = await _genericRepository.GetByIdAsync(entityId, cancellationToken);
             if (entity == null)
             {
                 _logger.LogWarning("Entity of type {EntityType} with ID {EntityId} was not found.", typeof(T).Name, entityId);
@@ -49,12 +56,14 @@ namespace OficinaMotocenter.Application.Services
         /// <summary>
         /// Retrieves all entities based on optional filter, ordering, skip, and take parameters asynchronously.
         /// </summary>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <param name="filter">The expression filter to apply to the query.</param>
         /// <param name="orderBy">The ordering function for the query.</param>
         /// <param name="skip">The number of records to skip.</param>
         /// <param name="take">The number of records to take.</param>
         /// <returns>A list of entities that match the query.</returns>
         public async Task<List<T>> GetAllAsync(
+                   CancellationToken cancellationToken,
                    Expression<Func<T, bool>> filter = null,
                    Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
                    int? skip = null,
@@ -62,7 +71,7 @@ namespace OficinaMotocenter.Application.Services
         {
             _logger.LogInformation("Retrieving all entities of type {EntityType} with filter {Filter}.", typeof(T).Name, filter);
 
-            IQueryable<T> query = _genericRepository.GetAll();
+            IQueryable<T> query = _genericRepository.GetAll(cancellationToken);
 
             if (filter != null)
             {
@@ -98,11 +107,13 @@ namespace OficinaMotocenter.Application.Services
         /// Creates a new entity asynchronously.
         /// </summary>
         /// <param name="entity">The entity to create.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>The created entity.</returns>
-        public async Task<T> CreateAsync(T entity)
+        public async Task<T> CreateAsync(T entity, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Creating a new entity of type {EntityType}.", typeof(T).Name);
-            await _genericRepository.AddAsync(entity);
+            await _genericRepository.AddAsync(entity, cancellationToken);
+            await _unitOfWork.Commit(cancellationToken);
             _logger.LogInformation("Successfully created entity of type {EntityType}.", typeof(T).Name);
             return entity;
         }
@@ -111,11 +122,13 @@ namespace OficinaMotocenter.Application.Services
         /// Updates an existing entity asynchronously.
         /// </summary>
         /// <param name="updatedEntity">The updated entity to save.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>The updated entity.</returns>
-        public async Task<T> UpdateAsync(T updatedEntity)
+        public async Task<T> UpdateAsync(T updatedEntity, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Updating entity of type {EntityType}.", typeof(T).Name);
-            await _genericRepository.UpdateAsync(updatedEntity);
+            await _genericRepository.UpdateAsync(updatedEntity, cancellationToken);
+            await _unitOfWork.Commit(cancellationToken);
             _logger.LogInformation("Successfully updated entity of type {EntityType}.", typeof(T).Name);
             return updatedEntity;
         }
@@ -124,11 +137,13 @@ namespace OficinaMotocenter.Application.Services
         /// Deletes an entity by its unique identifier asynchronously.
         /// </summary>
         /// <param name="entityId">The unique identifier of the entity to delete.</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A boolean indicating whether the entity was successfully deleted.</returns>
-        public async Task<bool> DeleteAsync(Guid entityId)
+        public async Task<bool> DeleteAsync(Guid entityId, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Attempting to delete entity of type {EntityType} with ID {EntityId}.", typeof(T).Name, entityId);
-            await _genericRepository.DeleteAsync(entityId);
+            await _genericRepository.DeleteAsync(entityId, cancellationToken);
+            await _unitOfWork.Commit(cancellationToken);
             _logger.LogInformation("Successfully deleted entity of type {EntityType} with ID {EntityId}.", typeof(T).Name, entityId);
             return true;
         }
