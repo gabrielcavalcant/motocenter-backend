@@ -11,6 +11,9 @@ namespace OficinaMotocenter.Domain.Interfaces.UnitOfWork
     {
         IGenericRepository<Motorcycle> MotorcycleRepository { get; }
         IGenericRepository<Customer> CustomerRepository { get; }
+        IGenericRepository<User> UserRepository { get; }
+        IGenericRepository<Role> RoleRepository { get; }
+        IGenericRepository<Permission> PermissionRepository { get; }
 
         /// <summary>
         /// Commits all changes made in the current transaction.
