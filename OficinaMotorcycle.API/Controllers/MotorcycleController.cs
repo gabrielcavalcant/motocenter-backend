@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OficinaMotocenter.Application.Dto.Requests.Motorcycle;
 using OficinaMotocenter.Application.Dto.Responses.Motorcycle;
@@ -11,6 +12,7 @@ namespace OficinaMotorcycle.API.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class MotorcycleController : ControllerBase
     {
         private readonly ILogger<MotorcycleController> _logger;
