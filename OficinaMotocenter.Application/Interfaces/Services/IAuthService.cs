@@ -7,6 +7,6 @@ namespace OficinaMotocenter.Application.Interfaces.Services
     {
         Task<Tokens> SignInAsync(SignInRequest login, CancellationToken cancellationToken);
         Task<Tokens> RefreshAsync(RefreshTokenRequest refresh, CancellationToken cancellationToken);
-        Task<Tokens> SignupAsync(SignUpRequest signup, CancellationToken cancellationToken);
+        Task<Tokens> SignUpAsync(SignUpRequest signup, CancellationToken cancellationToken);
     }
 }

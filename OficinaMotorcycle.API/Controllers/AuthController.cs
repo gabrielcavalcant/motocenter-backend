@@ -31,9 +31,9 @@ namespace OficinaMotorcycle.API.Controllers
         }
 
         [HttpPost("signup")]
-        public async Task<IActionResult> Signup([FromBody] SignUpRequest signUp, CancellationToken cancellationToken)
+        public async Task<IActionResult> SignUp([FromBody] SignUpRequest signUp, CancellationToken cancellationToken)
         {
-            Tokens token = await _authService.SignupAsync(signUp, cancellationToken);
+            Tokens token = await _authService.SignUpAsync(signUp, cancellationToken);
             if (token == null)
             {
                 return Conflict(new { message = "Email já está em uso." });
@@ -49,7 +49,6 @@ namespace OficinaMotorcycle.API.Controllers
             {
                 return Unauthorized();
             }
-
             return Ok(token);
         }
 

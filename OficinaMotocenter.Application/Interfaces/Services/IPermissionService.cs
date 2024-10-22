@@ -1,4 +1,6 @@
-﻿using OficinaMotocenter.Domain.Entities;
+﻿using OficinaMotocenter.Application.Dto.Requests.Permission;
+using OficinaMotocenter.Application.Dto.Responses.Permission;
+using OficinaMotocenter.Domain.Entities;
 
 namespace OficinaMotocenter.Application.Interfaces.Services
 {
@@ -7,5 +9,10 @@ namespace OficinaMotocenter.Application.Interfaces.Services
         Task<Permission> GetByNameAsync(string name, CancellationToken cancellationToken);
 
         Task<bool> AddRoleToPermission(Guid permissionId, Guid roleId, CancellationToken cancellationToken);
+
+        Task<PermissionDtoResponse> GetPermissionByIdAsync (Guid permissionId, CancellationToken cancellationToken);
+
+        Task<GetListPermissionResponse> GetListPermissionAsync(GetListPermissionRequest request, CancellationToken cancellationToken);
+
     }
 }

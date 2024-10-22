@@ -96,7 +96,7 @@ namespace OficinaMotocenter.Application.Services
             }
         }
 
-        public async Task<Tokens> SignupAsync(SignUpRequest signUp, CancellationToken cancellationToken)
+        public async Task<Tokens> SignUpAsync(SignUpRequest signUp, CancellationToken cancellationToken)
         {
             // Verificar se o e-mail já está cadastrado
             User existingUser = await _userRepository.GetByEmailAsync(signUp.Email, cancellationToken);

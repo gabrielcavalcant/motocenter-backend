@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using OficinaMotocenter.Application.Dto.Requests.Permission;
+using OficinaMotocenter.Application.Dto.Responses.Motorcycle;
 using OficinaMotocenter.Application.Dto.Responses.Permission;
 using OficinaMotocenter.Domain.Entities;
 
@@ -27,6 +28,13 @@ namespace OficinaMotocenter.Application.AutoMapping
 
             //// Mapeamento de UpdateRoleDTO para Role
             //CreateMap<UpdateRoleDTO, Role>();
+
+            // Map Motorcycle to MotorcycleDto (for use in paginated responses)
+            CreateMap<Permission, PermissionDto>();
+
+            // Optional: Mapping for paginated responses if needed
+            CreateMap<List<Permission>, GetListPermissionResponse>()
+                .ForMember(dest => dest.Permissions, opt => opt.MapFrom(src => src)); // Maps List<Permission> to List<PermissionDto>
         }
     }
 }

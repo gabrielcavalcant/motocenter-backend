@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using AutoMapper;
+using Microsoft.Extensions.Logging;
+using OficinaMotocenter.Application.Dto.Requests.Permission;
+using OficinaMotocenter.Application.Dto.Responses.Motorcycle;
+using OficinaMotocenter.Application.Dto.Responses.Permission;
 using OficinaMotocenter.Application.Interfaces.Services;
 using OficinaMotocenter.Domain.Entities;
 using OficinaMotocenter.Domain.Interfaces.Repositories;
@@ -11,16 +15,21 @@ namespace OficinaMotocenter.Application.Services
         private readonly IRoleRepository _roleRepository;
         private readonly IPermissionRepository _permissionRepository;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
+        private readonly ILogger<PermissionService> _logger;
 
 
         public PermissionService(IRoleRepository roleRepository,
                                  IPermissionRepository permissionRepository,
-                                 IUnitOfWork unitOfWork, 
+                                 IUnitOfWork unitOfWork,
+                                 IMapper mapper,
                                  ILogger<PermissionService> logger) : base(permissionRepository, unitOfWork, logger)
         {
             _roleRepository = roleRepository;
             _permissionRepository = permissionRepository;
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Permission> GetByNameAsync(string name, CancellationToken cancellationToken)
@@ -54,6 +63,28 @@ namespace OficinaMotocenter.Application.Services
             }
 
             return true; // Retorna verdadeiro se a operação for bem-sucedida
+        }
+
+        public async Task<PermissionDtoResponse> GetPermissionByIdAsync(Guid permissionId, CancellationToken cancellationToken)
+        {
+            Permission permission = await GetByIdAsync(permissionId, cancellationToken);
+            return _mapper.Map<PermissionDtoResponse>(permission);
+        }
+
+        public async Task<GetListPermissionResponse> GetListPermissionAsync(GetListPermissionRequest request, CancellationToken cancellationToken)
+        {
+            _logger.LogInformation("Get permission list using: {@request}", request);
+
+            IList<Permission> permissionList = await GetAllAsync(
+                cancellationToken,
+                filter: m => (string.IsNullOrEmpty(request.Name) || m.Name.Contains(request.Name)),
+                skip: (request.PageIndex - 1) * request.PageSize,
+                take: request.PageSize
+            );
+
+            GetListPermissionResponse response = _mapper.Map<GetListPermissionResponse>(permissionList);
+            response.TotalCount = permissionList.Count;
+            return response;
         }
     }
 }

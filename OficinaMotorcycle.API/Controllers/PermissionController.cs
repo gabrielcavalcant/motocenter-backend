@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using OficinaMotocenter.Application.Dto.Requests.Permission;
+using OficinaMotocenter.Application.Dto.Responses.Motorcycle;
 using OficinaMotocenter.Application.Dto.Responses.Permission;
 using OficinaMotocenter.Application.Interfaces.Services;
+using OficinaMotocenter.Application.Services;
 using OficinaMotocenter.Domain.Entities;
 using System.Linq.Expressions;
 
@@ -23,48 +25,26 @@ namespace OficinaMotorcycle.API.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetPermission(Guid id, CancellationToken cancellationToken)
+        [HttpGet("{permissionId}")]
+        public async Task<IActionResult> GetPermission(Guid permissionId, CancellationToken cancellationToken)
         {
-            var Permission = await _permissionService.GetByIdAsync(id, cancellationToken);
-            if (Permission == null)
+            PermissionDtoResponse response = await _permissionService.GetPermissionByIdAsync(permissionId, cancellationToken);
+            if (response == null)
             {
                 return NotFound(); // Retorna 404 se a Permission não for encontrada
             }
 
-            // Mapeia a entidade Permission para PermissionDTO automaticamente usando AutoMapper
-            var PermissionDto = _mapper.Map<PermissionDtoResponse>(Permission);
-
-            return Ok(PermissionDto); // Retorna a Permission encontrada como DTO
+            return Ok(response); // Retorna a Permission encontrada como DTO
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllPermissions(
-        CancellationToken cancellationToken,
-         string name = "",
-         string orderBy = "",
-         int pageNumber = 1,
-         int pageSize = 10)
+        public async Task<IActionResult> GetListPermissions(GetListPermissionRequest request,CancellationToken cancellationToken)
         {
-            Expression<Func<Permission, bool>> filter = Permission => name == null || Permission.Name.Contains(name);
+            GetListPermissionResponse response = await _permissionService.GetListPermissionAsync(request, cancellationToken);
+            if (response == null)
+                return NotFound();
 
-            Func<IQueryable<Permission>, IOrderedQueryable<Permission>> orderFunc = null;
-            if (!string.IsNullOrEmpty(orderBy))
-            {
-                if (orderBy.Equals("name", StringComparison.OrdinalIgnoreCase))
-                {
-                    orderFunc = query => query.OrderBy(Permission => Permission.Name);
-                }
-
-            }
-
-            int skip = (pageNumber - 1) * pageSize;
-            int take = pageSize;
-
-            IList<Permission> Permissions = await _permissionService.GetAllAsync(cancellationToken, filter, orderFunc, skip, take);
-            IList<PermissionDtoResponse> PermissionDtos = Permissions.Select(Permission => _mapper.Map<PermissionDtoResponse>(Permission)).ToList();
-
-            return Ok(PermissionDtos);
+            return Ok(response);
         }
 
         [HttpPost]
