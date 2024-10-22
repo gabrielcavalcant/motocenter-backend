@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace OficinaMotocenter.Application.Dto.Responses.Role
 {
-    internal class RoleDtoResponse
+    public class RoleDtoResponse
     {
         public Guid Id { get; set; } // ID da role
 

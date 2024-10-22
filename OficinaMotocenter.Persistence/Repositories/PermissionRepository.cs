@@ -31,5 +31,6 @@ namespace OficinaMotocenter.Persistence.Repositories
         {
             return await _dbSet.FirstOrDefaultAsync(r => r.Name == name);
         }
+
     }
 }

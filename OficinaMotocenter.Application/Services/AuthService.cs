@@ -4,27 +4,23 @@ using OficinaMotocenter.Application.Interfaces.Services;
 using OficinaMotocenter.Domain.Entities;
 using OficinaMotocenter.Domain.Interfaces.Repositories;
 using OficinaMotocenter.Domain.Interfaces.UnitOfWork;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace OficinaMotocenter.Application.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly IUserRepository _userRepository;
         private readonly ITokenService _tokenService;
-        private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserRepository _userRepository;
 
-        public AuthService(IUserRepository userRepository, ITokenService tokenService)
+        public AuthService(IUserRepository userRepository, ITokenService tokenService, IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
             _tokenService = tokenService;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Tokens> SignInAsync(SignInRequest login, CancellationToken cancellationToken)
@@ -115,13 +111,14 @@ namespace OficinaMotocenter.Application.Services
             // Criar o novo usuário
             User newUser = new User
             {
-                UserId = Guid.NewGuid(),
                 Email = signUp.Email,
                 FullName = signUp.FullName,
                 Hash = passwordHash,
             };
 
             await _userRepository.AddAsync(newUser, cancellationToken); // Adiciona o novo usuário
+
+            await _unitOfWork.Commit(cancellationToken); // Salva as mudanças
 
             // Gerar token para o novo usuário
             Tokens newTokens = _tokenService.GenerateTokens(newUser);

@@ -57,7 +57,7 @@ namespace OficinaMotorcycle.API.Controllers
         [HttpPost("request-reset")]
         public async Task<IActionResult> RequestPasswordReset([FromBody] ResetRequest resetRequest, CancellationToken cancellationToken)
         {
-            bool result = await _passwordResetService.SendPasswordResetTokenAsync(resetRequest.Email);
+            bool result = await _passwordResetService.SendPasswordResetTokenAsync(resetRequest.Email, cancellationToken);
             if (!result)
             {
                 return NotFound(new { message = "Email não encontrado." });
@@ -70,7 +70,7 @@ namespace OficinaMotorcycle.API.Controllers
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest resetPassword, CancellationToken cancellationToken)
         {
             bool result = await _passwordResetService.ResetPasswordAsync(
-                resetPassword.Email, resetPassword.Token, resetPassword.NewPassword);
+                resetPassword.Email, resetPassword.Token, resetPassword.NewPassword, cancellationToken);
 
             if (!result)
             {
