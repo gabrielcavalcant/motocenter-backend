@@ -3,10 +3,12 @@ using Microsoft.Extensions.Logging;
 using OficinaMotocenter.Application.Dto.Requests.Permission;
 using OficinaMotocenter.Application.Dto.Responses.Motorcycle;
 using OficinaMotocenter.Application.Dto.Responses.Permission;
+using OficinaMotocenter.Application.Exceptions;
 using OficinaMotocenter.Application.Interfaces.Services;
 using OficinaMotocenter.Domain.Entities;
 using OficinaMotocenter.Domain.Interfaces.Repositories;
 using OficinaMotocenter.Domain.Interfaces.UnitOfWork;
+using System.Threading;
 
 namespace OficinaMotocenter.Application.Services
 {
@@ -30,6 +32,36 @@ namespace OficinaMotocenter.Application.Services
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _logger = logger;
+        }
+
+        public async Task<PermissionDtoResponse> CreatePermissionAsync(CreatePermissionRequest request, CancellationToken cancellationToken)
+        {
+            // Mapeia o DTO para a entidade Permission
+            Permission newPermission = _mapper.Map<Permission>(request);
+
+            // Cria a nova Permission usando o serviço
+            Permission createdPermission = await CreateAsync(newPermission, cancellationToken);
+
+            // Mapeia a entidade criada para o DTO
+            return _mapper.Map<PermissionDtoResponse>(createdPermission);
+        }
+
+        public async Task<PermissionDtoResponse> UpdatePermissionAsync(Guid id, UpdatePermissionRequest request, CancellationToken cancellationToken)
+        {
+            Permission PermissionToUpdate = await GetByIdAsync(id, cancellationToken);
+            
+            if (PermissionToUpdate == null)
+            {
+                throw new InvalidArgumentException("Permission not found");
+            }
+
+            // Atualiza apenas as propriedades necessárias
+            _mapper.Map(request, PermissionToUpdate); // Atualiza a entidade com os dados do DTO
+
+            await UpdateAsync(PermissionToUpdate, cancellationToken);
+
+            // Mapeia a entidade Permission para PermissionDTO
+            return _mapper.Map<PermissionDtoResponse>(PermissionToUpdate);
         }
 
         public async Task<Permission> GetByNameAsync(string name, CancellationToken cancellationToken)
@@ -85,6 +117,18 @@ namespace OficinaMotocenter.Application.Services
             GetListPermissionResponse response = _mapper.Map<GetListPermissionResponse>(permissionList);
             response.TotalCount = permissionList.Count;
             return response;
+        }
+
+        /// <summary>
+        /// Executes the soft delete of a existent permission.
+        /// </summary>
+        /// <param name="id">permission Id</param>
+        /// <param name="cancellationToken">Token to cancel the operation.</param>
+        /// <returns>A boolean result</returns>
+        public async Task<bool> DeletePermissionAsync(Guid id, CancellationToken cancellationToken)
+        {
+            bool motorcycleDeleted = await base.DeleteAsync(id, cancellationToken);
+            return motorcycleDeleted;
         }
     }
 }

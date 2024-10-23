@@ -14,5 +14,11 @@ namespace OficinaMotocenter.Application.Interfaces.Services
 
         Task<GetListPermissionResponse> GetListPermissionAsync(GetListPermissionRequest request, CancellationToken cancellationToken);
 
+        Task<PermissionDtoResponse> CreatePermissionAsync(CreatePermissionRequest request, CancellationToken cancellationToken);
+
+        Task<PermissionDtoResponse> UpdatePermissionAsync(Guid id, UpdatePermissionRequest request, CancellationToken cancellationToken);
+
+        Task<bool> DeletePermissionAsync(Guid id, CancellationToken cancellationToken);
+
     }
 }

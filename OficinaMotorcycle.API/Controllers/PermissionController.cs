@@ -1,12 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OficinaMotocenter.Application.Dto.Requests.Permission;
-using OficinaMotocenter.Application.Dto.Responses.Motorcycle;
 using OficinaMotocenter.Application.Dto.Responses.Permission;
 using OficinaMotocenter.Application.Interfaces.Services;
-using OficinaMotocenter.Application.Services;
-using OficinaMotocenter.Domain.Entities;
-using System.Linq.Expressions;
+
 
 namespace OficinaMotorcycle.API.Controllers
 {
@@ -15,14 +11,10 @@ namespace OficinaMotorcycle.API.Controllers
     public class PermissionController : Controller
     {
         private readonly IPermissionService _permissionService;
-        private readonly IRoleService _roleService;
-        private readonly IMapper _mapper;
 
-        public PermissionController(IPermissionService permissionService, IRoleService roleService, IMapper mapper)
+        public PermissionController(IPermissionService permissionService)
         {
             _permissionService = permissionService;
-            _roleService = roleService;
-            _mapper = mapper;
         }
 
         [HttpGet("{permissionId}")]
@@ -38,7 +30,7 @@ namespace OficinaMotorcycle.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetListPermissions(GetListPermissionRequest request,CancellationToken cancellationToken)
+        public async Task<IActionResult> GetListPermissions([FromQuery] GetListPermissionRequest request,CancellationToken cancellationToken)
         {
             GetListPermissionResponse response = await _permissionService.GetListPermissionAsync(request, cancellationToken);
             if (response == null)
@@ -55,49 +47,30 @@ namespace OficinaMotorcycle.API.Controllers
                 return BadRequest("Permission não pode ser nula."); // Retorna 400 se a Permission for nula
             }
 
-            // Mapeia o DTO para a entidade Permission
-            Permission newPermission = _mapper.Map<Permission>(newPermissionDto);
-
-            // Cria a nova Permission usando o serviço
-            Permission createdPermission = await _permissionService.CreateAsync(newPermission, cancellationToken);
-
-            // Mapeia a entidade criada para o DTO
-            PermissionDtoResponse createdPermissionDto = _mapper.Map<PermissionDtoResponse>(createdPermission);
+            PermissionDtoResponse response = await _permissionService.CreatePermissionAsync(newPermissionDto, cancellationToken);
 
             // Retorna 201 com a nova Permission mapeada para PermissionDTO
-            return CreatedAtAction(nameof(GetPermission), new { id = createdPermissionDto.Id }, createdPermissionDto);
+            return CreatedAtAction(nameof(GetPermission), new { permissionId = response.PermissionId }, response);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePermission(Guid id, [FromBody] UpdatePermissionRequest updatedPermissionDto, CancellationToken cancellationToken)
+        [HttpPut("{permissionId}")]
+        public async Task<IActionResult> UpdatePermission(Guid permissionId, [FromBody] UpdatePermissionRequest updatedPermissionDto, CancellationToken cancellationToken)
         {
             if (updatedPermissionDto == null)
             {
                 return BadRequest("Permission não pode ser nula.");
             }
 
-            var PermissionToUpdate = await _permissionService.GetByIdAsync(id, cancellationToken);
-            if (PermissionToUpdate == null)
-            {
-                return NotFound("Permission não encontrada.");
-            }
-
-            // Atualiza apenas as propriedades necessárias
-            _mapper.Map(updatedPermissionDto, PermissionToUpdate); // Atualiza a entidade com os dados do DTO
-
-            await _permissionService.UpdateAsync(PermissionToUpdate, cancellationToken);
-
-            // Mapeia a entidade Permission para PermissionDTO
-            var updatedPermissionDtoResult = _mapper.Map<PermissionDtoResponse>(PermissionToUpdate);
+            PermissionDtoResponse response = await _permissionService.UpdatePermissionAsync(permissionId, updatedPermissionDto, cancellationToken);
 
             // Retorna a Permission atualizada com status 200 OK
-            return Ok(updatedPermissionDtoResult);
+            return Ok(response);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePermission(Guid id, CancellationToken cancellationToken)
+        [HttpDelete("{permissionId}")]
+        public async Task<IActionResult> DeletePermission(Guid permissionId, CancellationToken cancellationToken)
         {
-            bool success = await _permissionService.DeleteAsync(id, cancellationToken);
+            bool success = await _permissionService.DeletePermissionAsync(permissionId, cancellationToken);
             if (!success)
             {
                 return NotFound(); // Retorna 404 se a deleção falhar
@@ -108,7 +81,7 @@ namespace OficinaMotorcycle.API.Controllers
         [HttpPost("{permissionId}/roles/{roleId}")]
         public async Task<IActionResult> AddRoleToPermission(Guid permissionId, Guid roleId, CancellationToken cancellationToken)
         {
-            var result = await _permissionService.AddRoleToPermission(permissionId, roleId, cancellationToken);
+            bool result = await _permissionService.AddRoleToPermission(permissionId, roleId, cancellationToken);
             if (!result)
             {
                 return NotFound("Permission ou Role não encontrada.");
