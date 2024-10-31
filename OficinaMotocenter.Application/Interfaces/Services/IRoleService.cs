@@ -4,6 +4,6 @@ namespace OficinaMotocenter.Application.Interfaces.Services
 {
     public interface IRoleService : IGenericService<Role>
     {
-        Task<Role> getByName(string name, CancellationToken cancellationToken);
+        Task<Role> getByName(string name);
     }
 }

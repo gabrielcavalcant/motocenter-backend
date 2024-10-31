@@ -22,13 +22,11 @@ namespace OficinaMotorcycle.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetRoleById(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetRoleById(Guid id)
         {
             // Incluindo permissões na consulta
             var role = await _roleService.GetByIdAsync(
-                id,
-                cancellationToken // Passando o CancellationToken
-            );
+                id            );
 
             if (role == null)
             {
@@ -77,7 +75,7 @@ namespace OficinaMotorcycle.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateRole([FromBody] CreateRoleRequest newRoleDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateRole([FromBody] CreateRoleRequest newRoleDto)
         {
             if (newRoleDto == null)
             {
@@ -88,7 +86,7 @@ namespace OficinaMotorcycle.API.Controllers
             var newRole = _mapper.Map<Role>(newRoleDto);
 
             // Cria a nova role usando o serviço
-            Role createdRole = await _roleService.CreateAsync(newRole, cancellationToken);
+            Role createdRole = await _roleService.CreateAsync(newRole);
 
             // Mapeia a entidade criada para o DTO
             RoleDtoResponse createdRoleDto = _mapper.Map<RoleDtoResponse>(createdRole);
@@ -98,14 +96,14 @@ namespace OficinaMotorcycle.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateRole(Guid id, [FromBody] UpdateRoleRequest updatedRoleDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateRole(Guid id, [FromBody] UpdateRoleRequest updatedRoleDto)
         {
             if (updatedRoleDto == null)
             {
                 return BadRequest("Role não pode ser nula.");
             }
 
-            var roleToUpdate = await _roleService.GetByIdAsync(id, cancellationToken);
+            var roleToUpdate = await _roleService.GetByIdAsync(id);
             if (roleToUpdate == null)
             {
                 return NotFound("Role não encontrada.");
@@ -114,7 +112,7 @@ namespace OficinaMotorcycle.API.Controllers
             // Atualiza apenas as propriedades necessárias
             _mapper.Map(updatedRoleDto, roleToUpdate); // Atualiza a entidade com os dados do DTO
 
-            await _roleService.UpdateAsync(roleToUpdate, cancellationToken);
+            await _roleService.UpdateAsync(roleToUpdate);
 
             // Mapeia a entidade Role para RoleDTO
             var updatedRoleDtoResult = _mapper.Map<RoleDtoResponse>(roleToUpdate);
@@ -124,9 +122,9 @@ namespace OficinaMotorcycle.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteRole(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteRole(Guid id)
         {
-            bool success = await _roleService.DeleteAsync(id, cancellationToken);
+            bool success = await _roleService.DeleteAsync(id);
             if (!success)
             {
                 return NotFound(); // Retorna 404 se a deleção falhar

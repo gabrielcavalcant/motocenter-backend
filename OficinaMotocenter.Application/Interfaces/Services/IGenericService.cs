@@ -12,9 +12,8 @@ namespace OficinaMotocenter.Application.Interfaces.Services
         /// Asynchronously retrieves an entity by its unique identifier.
         /// </summary>
         /// <param name="entityId">The unique identifier of the entity.</param>
-        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the entity.</returns>
-        Task<T> GetByIdAsync(Guid entityId, CancellationToken cancellationToken);
+        Task<T> GetByIdAsync(Guid entityId);
 
         /// <summary>
         /// Asynchronously retrieves a list of entities, optionally filtered, ordered, skipped, and taken.
@@ -35,24 +34,21 @@ namespace OficinaMotocenter.Application.Interfaces.Services
         /// Asynchronously creates a new entity.
         /// </summary>
         /// <param name="entity">The entity to create.</param>
-        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the created entity.</returns>
-        Task<T> CreateAsync(T entity, CancellationToken cancellationToken);
+        Task<T> CreateAsync(T entity);
 
         /// <summary>
         /// Asynchronously updates an existing entity.
         /// </summary>
         /// <param name="updatedEntity">The entity with updated values.</param>
-        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the updated entity.</returns>
-        Task<T> UpdateAsync(T updatedEntity, CancellationToken cancellationToken);
+        Task<T> UpdateAsync(T updatedEntity);
 
         /// <summary>
         /// Asynchronously deletes an entity by its unique identifier.
         /// </summary>
         /// <param name="entityId">The unique identifier of the entity to delete.</param>
-        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains a boolean value indicating whether the deletion was successful.</returns>
-        Task<bool> DeleteAsync(Guid entityId, CancellationToken cancellationToken);
+        Task<bool> DeleteAsync(Guid entityId);
     }
 }

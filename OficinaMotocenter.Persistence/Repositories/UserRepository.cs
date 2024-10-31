@@ -25,9 +25,8 @@ namespace OficinaMotocenter.Persistence.Repositories
         /// Retrieves a User by their email.
         /// </summary>
         /// <param name="email">The email of the User to retrieve.</param>
-        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>The User corresponding to the provided email.</returns>
-        public async Task<User> GetByEmailAsync(string email, CancellationToken cancellationToken)
+        public async Task<User> GetByEmailAsync(string email)
         {
             return await _context.Set<User>().FirstOrDefaultAsync(u => u.Email == email);
         }

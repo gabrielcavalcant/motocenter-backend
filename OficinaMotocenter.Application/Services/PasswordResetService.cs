@@ -20,9 +20,9 @@ namespace OficinaMotocenter.Application.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<bool> SendPasswordResetTokenAsync(string email, CancellationToken cancellationToken)
+        public async Task<bool> SendPasswordResetTokenAsync(string email)
         {
-            User user = await _userRepository.GetByEmailAsync(email, cancellationToken);
+            User user = await _userRepository.GetByEmailAsync(email);
             if (user == null)
             {
                 return false; // Usuário não encontrado
@@ -33,19 +33,19 @@ namespace OficinaMotocenter.Application.Services
             user.PasswordResetToken = resetToken;
             user.ResetTokenExpiry = DateTime.UtcNow.AddHours(1); // Token válido por 1 hora
 
-            await _userRepository.UpdateAsync(user, cancellationToken);
-            await _unitOfWork.Commit(cancellationToken);
+            await _userRepository.UpdateAsync(user);
+            await _unitOfWork.Commit();
 
             // Enviar e-mail com o token de reset
-            await _emailService.SendPasswordResetEmailAsync(user.Email, resetToken, cancellationToken);
+            await _emailService.SendPasswordResetEmailAsync(user.Email, resetToken);
 
             return true;
         }
 
         // Passo 2: Validar o token e resetar a senha
-        public async Task<bool> ResetPasswordAsync(string email, string token, string newPassword, CancellationToken cancellationToken)
+        public async Task<bool> ResetPasswordAsync(string email, string token, string newPassword)
         {
-            User user = await _userRepository.GetByEmailAsync(email, cancellationToken);
+            User user = await _userRepository.GetByEmailAsync(email);
             if (user == null || user.PasswordResetToken != token || user.ResetTokenExpiry < DateTime.UtcNow)
             {
                 return false; // Token inválido ou expirado
@@ -56,8 +56,8 @@ namespace OficinaMotocenter.Application.Services
             user.PasswordResetToken = null; // Limpar o token de reset
             user.ResetTokenExpiry = null;
 
-            await _userRepository.UpdateAsync(user, cancellationToken);
-            await _unitOfWork.Commit(cancellationToken);
+            await _userRepository.UpdateAsync(user);
+            await _unitOfWork.Commit();
 
             return true;
         }

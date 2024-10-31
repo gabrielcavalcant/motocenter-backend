@@ -35,14 +35,13 @@ namespace OficinaMotorcycle.API.Controllers
         /// Creates a new customer.
         /// </summary>
         /// <param name="request">The customer data transfer object containing customer details.</param>
-        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A created customer response along with a location header.</returns>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CreateCustomerRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Post([FromBody] CreateCustomerRequest request)
         {
             _logger.LogInformation("Request initiated");
 
-            CreateCustomerResponse response = await _customerService.CreateCustomerAsync(request, cancellationToken);
+            CreateCustomerResponse response = await _customerService.CreateCustomerAsync(request);
 
             _logger.LogInformation("Response: {@response}", response);
             return CreatedAtAction(nameof(Get), new { customerId = response.CustomerId }, response);
@@ -52,12 +51,11 @@ namespace OficinaMotorcycle.API.Controllers
         /// Retrieves a customer by its ID.
         /// </summary>
         /// <param name="customerId">The ID of the customer to retrieve.</param>
-        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>The customer details if found; otherwise, a 404 Not Found response.</returns>
         [HttpGet("{customerId}")]
-        public async Task<IActionResult> Get(Guid customerId, CancellationToken cancellationToken)
+        public async Task<IActionResult> Get(Guid customerId)
         {
-            GetCustomerByIdResponse response = await _customerService.GetCustomerByIdAsync(customerId, cancellationToken);
+            GetCustomerByIdResponse response = await _customerService.GetCustomerByIdAsync(customerId);
 
             if (response == null)
                 return NotFound();
@@ -86,12 +84,11 @@ namespace OficinaMotorcycle.API.Controllers
         /// </summary>
         /// <param name="customerId">The ID of the customer to update.</param>
         /// <param name="request">The customer data transfer object containing updated details.</param>
-        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>The updated customer response.</returns>
         [HttpPatch("{customerId}")]
-        public async Task<IActionResult> Put(Guid customerId, [FromBody] UpdateCustomerRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Put(Guid customerId, [FromBody] UpdateCustomerRequest request)
         {
-            UpdateCustomerResponse response = await _customerService.UpdateCustomerAsync(customerId, request, cancellationToken);
+            UpdateCustomerResponse response = await _customerService.UpdateCustomerAsync(customerId, request);
             return Ok(response);
         }
 
@@ -99,12 +96,11 @@ namespace OficinaMotorcycle.API.Controllers
         /// Deletes a customer by its ID.
         /// </summary>
         /// <param name="customerId">The ID of the customer to delete.</param>
-        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A no-content response if successful; otherwise, a bad request response.</returns>
         [HttpDelete("{customerId}")]
-        public async Task<IActionResult> Delete(Guid customerId, CancellationToken cancellationToken)
+        public async Task<IActionResult> Delete(Guid customerId)
         {
-            bool response = await _customerService.DeleteCustomerAsync(customerId, cancellationToken);
+            bool response = await _customerService.DeleteCustomerAsync(customerId);
             if (response == true)
             {
                 return NoContent();

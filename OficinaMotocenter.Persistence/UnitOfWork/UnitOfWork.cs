@@ -31,11 +31,10 @@ namespace OficinaMotocenter.Persistence.UnitOfWork
         /// <summary>
         /// Commits all changes made in the current transaction to the database.
         /// </summary>
-        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task Commit(CancellationToken cancellationToken)
+        public async Task Commit()
         {
-            await _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync();
         }
 
         /// <summary>

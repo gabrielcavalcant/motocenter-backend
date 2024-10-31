@@ -34,21 +34,21 @@ namespace OficinaMotocenter.Application.Services
             _logger = logger;
         }
 
-        public async Task<PermissionDtoResponse> CreatePermissionAsync(CreatePermissionRequest request, CancellationToken cancellationToken)
+        public async Task<PermissionDtoResponse> CreatePermissionAsync(CreatePermissionRequest request)
         {
             // Mapeia o DTO para a entidade Permission
             Permission newPermission = _mapper.Map<Permission>(request);
 
             // Cria a nova Permission usando o serviço
-            Permission createdPermission = await CreateAsync(newPermission, cancellationToken);
+            Permission createdPermission = await CreateAsync(newPermission);
 
             // Mapeia a entidade criada para o DTO
             return _mapper.Map<PermissionDtoResponse>(createdPermission);
         }
 
-        public async Task<PermissionDtoResponse> UpdatePermissionAsync(Guid id, UpdatePermissionRequest request, CancellationToken cancellationToken)
+        public async Task<PermissionDtoResponse> UpdatePermissionAsync(Guid id, UpdatePermissionRequest request)
         {
-            Permission PermissionToUpdate = await GetByIdAsync(id, cancellationToken);
+            Permission PermissionToUpdate = await GetByIdAsync(id);
             
             if (PermissionToUpdate == null)
             {
@@ -58,22 +58,22 @@ namespace OficinaMotocenter.Application.Services
             // Atualiza apenas as propriedades necessárias
             _mapper.Map(request, PermissionToUpdate); // Atualiza a entidade com os dados do DTO
 
-            await UpdateAsync(PermissionToUpdate, cancellationToken);
+            await UpdateAsync(PermissionToUpdate);
 
             // Mapeia a entidade Permission para PermissionDTO
             return _mapper.Map<PermissionDtoResponse>(PermissionToUpdate);
         }
 
-        public async Task<Permission> GetByNameAsync(string name, CancellationToken cancellationToken)
+        public async Task<Permission> GetByNameAsync(string name)
         {
-            return await _permissionRepository.GetByNameAsync(name, cancellationToken);
+            return await _permissionRepository.GetByNameAsync(name);
         }
 
         // Método para adicionar uma Role a uma Permission
-        public async Task<bool> AddRoleToPermission(Guid permissionId, Guid roleId, CancellationToken cancellationToken)
+        public async Task<bool> AddRoleToPermission(Guid permissionId, Guid roleId)
         {
             // Busca a permissão pelo ID
-            var permission = await GetByIdAsync(permissionId, cancellationToken);
+            var permission = await GetByIdAsync(permissionId);
 
             if (permission == null)
             {
@@ -81,7 +81,7 @@ namespace OficinaMotocenter.Application.Services
             }
 
             // Busca a Role pelo ID
-            var role = await _roleRepository.GetByIdAsync(roleId, cancellationToken);
+            var role = await _roleRepository.GetByIdAsync(roleId);
             if (role == null)
             {
                 return false; // Retorna falso se a Role não for encontrada
@@ -91,15 +91,15 @@ namespace OficinaMotocenter.Application.Services
             if (!permission.Roles.Contains(role))
             {
                 permission.Roles.Add(role);
-                await _unitOfWork.Commit(cancellationToken); // Salva as alterações no banco de dados
+                await _unitOfWork.Commit(); // Salva as alterações no banco de dados
             }
 
             return true; // Retorna verdadeiro se a operação for bem-sucedida
         }
 
-        public async Task<PermissionDtoResponse> GetPermissionByIdAsync(Guid permissionId, CancellationToken cancellationToken)
+        public async Task<PermissionDtoResponse> GetPermissionByIdAsync(Guid permissionId)
         {
-            Permission permission = await GetByIdAsync(permissionId, cancellationToken);
+            Permission permission = await GetByIdAsync(permissionId);
             return _mapper.Map<PermissionDtoResponse>(permission);
         }
 
@@ -123,11 +123,10 @@ namespace OficinaMotocenter.Application.Services
         /// Executes the soft delete of a existent permission.
         /// </summary>
         /// <param name="id">permission Id</param>
-        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A boolean result</returns>
-        public async Task<bool> DeletePermissionAsync(Guid id, CancellationToken cancellationToken)
+        public async Task<bool> DeletePermissionAsync(Guid id )
         {
-            bool motorcycleDeleted = await base.DeleteAsync(id, cancellationToken);
+            bool motorcycleDeleted = await base.DeleteAsync(id);
             return motorcycleDeleted;
         }
     }

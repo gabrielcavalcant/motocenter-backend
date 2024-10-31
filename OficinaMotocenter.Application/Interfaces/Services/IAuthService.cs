@@ -5,8 +5,8 @@ namespace OficinaMotocenter.Application.Interfaces.Services
 {
     public interface IAuthService
     {
-        Task<Tokens> SignInAsync(SignInRequest login, CancellationToken cancellationToken);
-        Task<Tokens> RefreshAsync(RefreshTokenRequest refresh, CancellationToken cancellationToken);
-        Task<Tokens> SignUpAsync(SignUpRequest signup, CancellationToken cancellationToken);
+        Task<Tokens> SignInAsync(SignInRequest login);
+        Task<Tokens> RefreshAsync(RefreshTokenRequest refresh);
+        Task<Tokens> SignUpAsync(SignUpRequest signUp);
     }
 }

@@ -22,9 +22,9 @@ namespace OficinaMotorcycle.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUser(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetUser(Guid id)
         {
-            User user = await _userService.GetByIdAsync(id, cancellationToken);
+            User user = await _userService.GetByIdAsync(id);
             if (user == null)
             {
                 return NotFound(); // Retorna 404 se a role não for encontrada
@@ -52,7 +52,7 @@ namespace OficinaMotorcycle.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest newUserDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest newUserDto)
         {
             if (newUserDto == null)
             {
@@ -64,21 +64,21 @@ namespace OficinaMotorcycle.API.Controllers
                 FullName = newUserDto.FullName
             };
 
-            var createdUser = await _userService.CreateAsync(newUser,cancellationToken);
+            var createdUser = await _userService.CreateAsync(newUser);
             // Mapeia a entidade criada para o DTO para a resposta
             UserDtoResponse createdUserDto = _mapper.Map<UserDtoResponse>(createdUser);
             return CreatedAtAction(nameof(GetUser), new { id = createdUserDto.Id }, createdUserDto); // Retorna 201 com a nova role
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UpdateUserRequest updatedUserDTO, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateUser(Guid id, [FromBody] UpdateUserRequest updatedUserDTO)
         {
             if (updatedUserDTO == null)
             {
                 return BadRequest("User não pode ser nulo.");
             }
 
-            var userToUpdate = await _userService.GetByIdAsync(id, cancellationToken);
+            var userToUpdate = await _userService.GetByIdAsync(id);
             if (userToUpdate == null)
             {
                 return NotFound("User não encontrado.");
@@ -87,7 +87,7 @@ namespace OficinaMotorcycle.API.Controllers
             // Atualiza apenas as propriedades necessárias
             _mapper.Map(updatedUserDTO, userToUpdate); // Atualiza a entidade com os dados do DTO
 
-            await _userService.UpdateAsync(userToUpdate, cancellationToken);
+            await _userService.UpdateAsync(userToUpdate);
 
             // Mapeia a entidade User para UserDTO
             var updatedUserDtoResult = _mapper.Map<UserDtoResponse>(userToUpdate);
@@ -97,9 +97,9 @@ namespace OficinaMotorcycle.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteUser(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteUser(Guid id)
         {
-            bool success = await _userService.DeleteAsync(id, cancellationToken);
+            bool success = await _userService.DeleteAsync(id);
             if (!success)
             {
                 return NotFound();

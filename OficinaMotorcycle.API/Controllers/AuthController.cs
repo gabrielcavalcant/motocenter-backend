@@ -20,9 +20,9 @@ namespace OficinaMotorcycle.API.Controllers
         }
 
         [HttpPost("signin")]
-        public async Task<IActionResult> Login([FromBody] SignInRequest login, CancellationToken cancellationToken)
+        public async Task<IActionResult> Login([FromBody] SignInRequest login)
         {
-            Tokens token = await _authService.SignInAsync(login, cancellationToken);
+            Tokens token = await _authService.SignInAsync(login);
             if (token == null)
             {
                 return Unauthorized();
@@ -31,9 +31,9 @@ namespace OficinaMotorcycle.API.Controllers
         }
 
         [HttpPost("signup")]
-        public async Task<IActionResult> SignUp([FromBody] SignUpRequest signUp, CancellationToken cancellationToken)
+        public async Task<IActionResult> SignUp([FromBody] SignUpRequest signUp)
         {
-            Tokens token = await _authService.SignUpAsync(signUp, cancellationToken);
+            Tokens token = await _authService.SignUpAsync(signUp);
             if (token == null)
             {
                 return Conflict(new { message = "Email já está em uso." });
@@ -42,9 +42,9 @@ namespace OficinaMotorcycle.API.Controllers
         }
 
         [HttpPost("refresh")]
-        public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest refreshTokenRequest, CancellationToken cancellationToken)
+        public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest refreshTokenRequest)
         {
-            Tokens token = await _authService.RefreshAsync(refreshTokenRequest, cancellationToken);
+            Tokens token = await _authService.RefreshAsync(refreshTokenRequest);
             if (token == null)
             {
                 return Unauthorized();
@@ -54,9 +54,9 @@ namespace OficinaMotorcycle.API.Controllers
 
 
         [HttpPost("request-reset")]
-        public async Task<IActionResult> RequestPasswordReset([FromBody] ResetRequest resetRequest, CancellationToken cancellationToken)
+        public async Task<IActionResult> RequestPasswordReset([FromBody] ResetRequest resetRequest)
         {
-            bool result = await _passwordResetService.SendPasswordResetTokenAsync(resetRequest.Email, cancellationToken);
+            bool result = await _passwordResetService.SendPasswordResetTokenAsync(resetRequest.Email);
             if (!result)
             {
                 return NotFound(new { message = "Email não encontrado." });
@@ -66,10 +66,10 @@ namespace OficinaMotorcycle.API.Controllers
         }
 
         [HttpPost("reset-password")]
-        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest resetPassword, CancellationToken cancellationToken)
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest resetPassword)
         {
             bool result = await _passwordResetService.ResetPasswordAsync(
-                resetPassword.Email, resetPassword.Token, resetPassword.NewPassword, cancellationToken);
+                resetPassword.Email, resetPassword.Token, resetPassword.NewPassword);
 
             if (!result)
             {

@@ -25,9 +25,8 @@ namespace OficinaMotocenter.Persistence.Repositories
         /// Retrieves a permission by their name.
         /// </summary>
         /// <param name="name">The name of the permission to retrieve.</param>
-        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>The permission corresponding to the provided name.</returns>
-        public async Task<Permission> GetByNameAsync(string name, CancellationToken cancellationToken)
+        public async Task<Permission> GetByNameAsync(string name)
         {
             return await _dbSet.FirstOrDefaultAsync(r => r.Name == name);
         }

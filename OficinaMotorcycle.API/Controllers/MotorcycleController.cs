@@ -35,16 +35,15 @@ namespace OficinaMotorcycle.API.Controllers
         /// Creates a new motorcycle.
         /// </summary>
         /// <param name="request">The motorcycle data transfer object containing motorcycle details.</param>
-        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A created motorcycle response along with a location header.</returns>
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] CreateMotorcycleRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Post([FromBody] CreateMotorcycleRequest request)
         {
             try
             {
                 _logger.LogInformation("Request initiated");
 
-                CreateMotorcycleResponse response = await _motorcycleService.CreateMotorcycleAsync(request, cancellationToken);
+                CreateMotorcycleResponse response = await _motorcycleService.CreateMotorcycleAsync(request);
 
                 _logger.LogInformation("Response: {@response}", response);
                 return CreatedAtAction(nameof(Get), new { id = response.MotorcycleId }, response);
@@ -72,12 +71,11 @@ namespace OficinaMotorcycle.API.Controllers
         /// Retrieves a motorcycle by its ID.
         /// </summary>
         /// <param name="id">The ID of the motorcycle to retrieve.</param>
-        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>The motorcycle details if found; otherwise, a 404 Not Found response.</returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id, CancellationToken cancellationToken)
+        public async Task<IActionResult> Get(Guid id)
         {
-            GetMotorcycleByIdResponse response = await _motorcycleService.GetMotorcycleByIdAsync(id, cancellationToken);
+            GetMotorcycleByIdResponse response = await _motorcycleService.GetMotorcycleByIdAsync(id);
 
             if (response == null)
                 return NotFound();
@@ -106,12 +104,11 @@ namespace OficinaMotorcycle.API.Controllers
         /// </summary>
         /// <param name="motorcycleId">The ID of the motorcycle to update.</param>
         /// <param name="request">The motorcycle data transfer object containing updated details.</param>
-        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>The updated motorcycle response.</returns>
         [HttpPut("{motorcycleId}")]
-        public async Task<IActionResult> Put(Guid motorcycleId, [FromBody] UpdateMotorcycleRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> Put(Guid motorcycleId, [FromBody] UpdateMotorcycleRequest request )
         {
-            UpdateMotorcycleResponse response = await _motorcycleService.UpdateMotorcycleAsync(motorcycleId, request, cancellationToken);
+            UpdateMotorcycleResponse response = await _motorcycleService.UpdateMotorcycleAsync(motorcycleId, request);
             return Ok(response);
         }
 
@@ -119,12 +116,11 @@ namespace OficinaMotorcycle.API.Controllers
         /// Deletes a motorcycle by its ID.
         /// </summary>
         /// <param name="motorcycleId">The ID of the motorcycle to delete.</param>
-        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A no-content response if successful; otherwise, a bad request response.</returns>
         [HttpDelete("{motorcycleId}")]
-        public async Task<IActionResult> Delete(Guid motorcycleId, CancellationToken cancellationToken)
+        public async Task<IActionResult> Delete(Guid motorcycleId)
         {
-            bool response = await _motorcycleService.DeleteMotorcycleAsync(motorcycleId, cancellationToken);
+            bool response = await _motorcycleService.DeleteMotorcycleAsync(motorcycleId);
             if (response == true)
             {
                 return NoContent();

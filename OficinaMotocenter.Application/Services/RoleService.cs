@@ -22,9 +22,9 @@ namespace OficinaMotocenter.Application.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Role> getByName(string name, CancellationToken cancellationToken)
+        public async Task<Role> getByName(string name)
         {
-            return await _roleRepository.GetByNameAsync(name, cancellationToken);
+            return await _roleRepository.GetByNameAsync(name);
         }
     }
 }

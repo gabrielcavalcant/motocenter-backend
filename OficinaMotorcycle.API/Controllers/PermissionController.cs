@@ -18,9 +18,9 @@ namespace OficinaMotorcycle.API.Controllers
         }
 
         [HttpGet("{permissionId}")]
-        public async Task<IActionResult> GetPermission(Guid permissionId, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetPermission(Guid permissionId)
         {
-            PermissionDtoResponse response = await _permissionService.GetPermissionByIdAsync(permissionId, cancellationToken);
+            PermissionDtoResponse response = await _permissionService.GetPermissionByIdAsync(permissionId);
             if (response == null)
             {
                 return NotFound(); // Retorna 404 se a Permission não for encontrada
@@ -40,37 +40,37 @@ namespace OficinaMotorcycle.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePermission([FromBody] CreatePermissionRequest newPermissionDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> CreatePermission([FromBody] CreatePermissionRequest newPermissionDto)
         {
             if (newPermissionDto == null)
             {
                 return BadRequest("Permission não pode ser nula."); // Retorna 400 se a Permission for nula
             }
 
-            PermissionDtoResponse response = await _permissionService.CreatePermissionAsync(newPermissionDto, cancellationToken);
+            PermissionDtoResponse response = await _permissionService.CreatePermissionAsync(newPermissionDto);
 
             // Retorna 201 com a nova Permission mapeada para PermissionDTO
             return CreatedAtAction(nameof(GetPermission), new { permissionId = response.PermissionId }, response);
         }
 
         [HttpPut("{permissionId}")]
-        public async Task<IActionResult> UpdatePermission(Guid permissionId, [FromBody] UpdatePermissionRequest updatedPermissionDto, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdatePermission(Guid permissionId, [FromBody] UpdatePermissionRequest updatedPermissionDto)
         {
             if (updatedPermissionDto == null)
             {
                 return BadRequest("Permission não pode ser nula.");
             }
 
-            PermissionDtoResponse response = await _permissionService.UpdatePermissionAsync(permissionId, updatedPermissionDto, cancellationToken);
+            PermissionDtoResponse response = await _permissionService.UpdatePermissionAsync(permissionId, updatedPermissionDto);
 
             // Retorna a Permission atualizada com status 200 OK
             return Ok(response);
         }
 
         [HttpDelete("{permissionId}")]
-        public async Task<IActionResult> DeletePermission(Guid permissionId, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeletePermission(Guid permissionId)
         {
-            bool success = await _permissionService.DeletePermissionAsync(permissionId, cancellationToken);
+            bool success = await _permissionService.DeletePermissionAsync(permissionId);
             if (!success)
             {
                 return NotFound(); // Retorna 404 se a deleção falhar
@@ -79,9 +79,9 @@ namespace OficinaMotorcycle.API.Controllers
         }
 
         [HttpPost("{permissionId}/roles/{roleId}")]
-        public async Task<IActionResult> AddRoleToPermission(Guid permissionId, Guid roleId, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddRoleToPermission(Guid permissionId, Guid roleId)
         {
-            bool result = await _permissionService.AddRoleToPermission(permissionId, roleId, cancellationToken);
+            bool result = await _permissionService.AddRoleToPermission(permissionId, roleId);
             if (!result)
             {
                 return NotFound("Permission ou Role não encontrada.");

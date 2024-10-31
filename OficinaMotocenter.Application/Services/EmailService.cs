@@ -27,13 +27,13 @@ namespace OficinaMotocenter.Application.Services
             };
         }
 
-        public async Task SendPasswordResetEmailAsync(string email, string resetToken, CancellationToken cancellationToken)
+        public async Task SendPasswordResetEmailAsync(string email, string resetToken)
         {
             string resetUrl = $"https://seusistema.com/reset-password?token={resetToken}&email={email}";
 
             string htmlBody;
             string templatePath = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "PasswordResetEmail.html");
-            htmlBody = await File.ReadAllTextAsync(templatePath, cancellationToken);
+            htmlBody = await File.ReadAllTextAsync(templatePath);
 
             htmlBody = htmlBody.Replace("{resetUrl}", resetUrl);
 
@@ -48,7 +48,7 @@ namespace OficinaMotocenter.Application.Services
 
             mailMessage.To.Add(email);
 
-            await _smtpClient.SendMailAsync(mailMessage, cancellationToken);
+            await _smtpClient.SendMailAsync(mailMessage);
         }
     }
 }

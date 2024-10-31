@@ -23,25 +23,25 @@ namespace OficinaMotocenter.Application.Services
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<Tokens> SignInAsync(SignInRequest login, CancellationToken cancellationToken)
+        public async Task<Tokens> SignInAsync(SignInRequest login)
         {
             // Verificar se o usuário existe
-            User user = await _userRepository.GetByEmailAsync(login.Email, cancellationToken);
+            User user = await _userRepository.GetByEmailAsync(login.Email);
             if (user != null && VerifyPasswordHash(login.Hash, user.Hash))
             {
                 Tokens newTokens = _tokenService.GenerateTokens(user);
                 // Atualizar o campo HashedRt com o novo Refresh Token (hash)
                 user.HashedRt = ComputeHash(newTokens.RefreshToken);
 
-                await _userRepository.UpdateAsync(user, cancellationToken); // Atualiza o usuário
-                await _unitOfWork.Commit(cancellationToken); // Salva as mudanças
+                await _userRepository.UpdateAsync(user); // Atualiza o usuário
+                await _unitOfWork.Commit(); // Salva as mudanças
 
                 return newTokens;
             }
             return null; // Retorna null se o login falhar
         }
 
-        public async Task<Tokens> RefreshAsync(RefreshTokenRequest refresh, CancellationToken cancellationToken)
+        public async Task<Tokens> RefreshAsync(RefreshTokenRequest refresh)
         {
             // Validar o token existente (refresh token)
             ClaimsPrincipal principal = _tokenService.GetPrincipalFromExpiredToken(refresh.RefreshToken);
@@ -60,7 +60,7 @@ namespace OficinaMotocenter.Application.Services
             }
 
             // Buscar o usuário no banco de dados com base no ID
-            User user = await _userRepository.GetByIdAsync(userId, cancellationToken);
+            User user = await _userRepository.GetByIdAsync(userId);
             if (user == null)
             {
                 return null; // Usuário não encontrado
@@ -80,8 +80,8 @@ namespace OficinaMotocenter.Application.Services
             // Atualizar o campo HashedRt com o novo Refresh Token (hash)
             user.HashedRt = ComputeHash(newTokens.RefreshToken);
 
-            await _userRepository.UpdateAsync(user, cancellationToken); // Atualiza o usuário
-            await _unitOfWork.Commit(cancellationToken); // Salva as mudanças
+            await _userRepository.UpdateAsync(user); // Atualiza o usuário
+            await _unitOfWork.Commit(); // Salva as mudanças
 
             return newTokens;
         }
@@ -96,10 +96,10 @@ namespace OficinaMotocenter.Application.Services
             }
         }
 
-        public async Task<Tokens> SignUpAsync(SignUpRequest signUp, CancellationToken cancellationToken)
+        public async Task<Tokens> SignUpAsync(SignUpRequest signUp)
         {
             // Verificar se o e-mail já está cadastrado
-            User existingUser = await _userRepository.GetByEmailAsync(signUp.Email, cancellationToken);
+            User existingUser = await _userRepository.GetByEmailAsync(signUp.Email);
             if (existingUser != null)
             {
                 return null;
@@ -116,18 +116,18 @@ namespace OficinaMotocenter.Application.Services
                 Hash = passwordHash,
             };
 
-            await _userRepository.AddAsync(newUser, cancellationToken); // Adiciona o novo usuário
+            await _userRepository.AddAsync(newUser); // Adiciona o novo usuário
 
-            await _unitOfWork.Commit(cancellationToken); // Salva as mudanças
+            await _unitOfWork.Commit(); // Salva as mudanças
 
             // Gerar token para o novo usuário
             Tokens newTokens = _tokenService.GenerateTokens(newUser);
             // Atualizar o campo HashedRt com o novo Refresh Token (hash)
             newUser.HashedRt = ComputeHash(newTokens.RefreshToken);
 
-            await _userRepository.UpdateAsync(newUser, cancellationToken); // Atualiza o usuário
+            await _userRepository.UpdateAsync(newUser); // Atualiza o usuário
             
-            await _unitOfWork.Commit(cancellationToken); // Salva as mudanças
+            await _unitOfWork.Commit(); // Salva as mudanças
 
             return newTokens;
         }
