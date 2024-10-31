@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using OficinaMotocenter.Application.Dto.Requests.Role;
 using OficinaMotocenter.Application.Dto.Responses.Role;
+using OficinaMotocenter.Application.Dto.Responses.Role.OficinaMotocenter.Application.Dto.Responses;
 using OficinaMotocenter.Application.Interfaces.Services;
-using OficinaMotocenter.Domain.Entities;
-using System.Linq.Expressions;
 
 namespace OficinaMotorcycle.API.Controllers
 {
@@ -13,112 +11,59 @@ namespace OficinaMotorcycle.API.Controllers
     public class RoleController : ControllerBase
     {
         private readonly IRoleService _roleService;
-        private readonly IMapper _mapper;
 
-        public RoleController(IRoleService roleService, IMapper mapper)
+        public RoleController(IRoleService roleService)
         {
             _roleService = roleService;
-            _mapper = mapper;
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetRoleById(Guid id)
         {
-            // Incluindo permissões na consulta
-            var role = await _roleService.GetByIdAsync(
-                id            );
+            RoleDtoResponse response = await _roleService.GetRoleByIdAsync(id);
 
-            if (role == null)
+            if (response == null)
             {
                 return NotFound();
             }
 
-            // Mapeia a role para RoleDTO, incluindo as permissões
-            var roleDto = _mapper.Map<RoleDtoResponse>(role);
-
-            return Ok(roleDto);
+            return Ok(response);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllRoles(
-            CancellationToken cancellationToken,
-            string name = "",
-            string orderBy = "",
-            int pageNumber = 1,
-            int pageSize = 10)
+        public async Task<IActionResult> GetList([FromQuery] GetListRoleRequest request, CancellationToken cancellationToken)
         {
-            Expression<Func<Role, bool>> filter = role => string.IsNullOrEmpty(name) || role.Name.Contains(name);
+            GetListRoleResponse response = await _roleService.GetListRoleAsync(request, cancellationToken);
+            if (response == null)
+                return NotFound();
 
-            Func<IQueryable<Role>, IOrderedQueryable<Role>> orderFunc = null;
-            if (!string.IsNullOrEmpty(orderBy))
-            {
-                if (orderBy.Equals("name", StringComparison.OrdinalIgnoreCase))
-                {
-                    orderFunc = query => query.OrderBy(role => role.Name);
-                }
-            }
-
-            int skip = (pageNumber - 1) * pageSize;
-            int take = pageSize;
-
-            // Incluindo permissões na consulta
-            var roles = await _roleService.GetAllAsync(cancellationToken,
-                filter,
-                orderFunc,
-                skip,
-                take            );
-
-            // Mapeia as roles para RoleDTO, incluindo as permissões
-            IList<RoleDtoResponse> roleDtos = roles.Select(role => _mapper.Map<RoleDtoResponse>(role)).ToList();
-
-            return Ok(roleDtos);
+            return Ok(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateRole([FromBody] CreateRoleRequest newRoleDto)
+        public async Task<IActionResult> CreateRole([FromBody] CreateRoleRequest request)
         {
-            if (newRoleDto == null)
-            {
-                return BadRequest("Role não pode ser nula."); // Retorna 400 se a role for nula
-            }
-
-            // Mapeia o DTO para a entidade Role
-            var newRole = _mapper.Map<Role>(newRoleDto);
-
-            // Cria a nova role usando o serviço
-            Role createdRole = await _roleService.CreateAsync(newRole);
-
-            // Mapeia a entidade criada para o DTO
-            RoleDtoResponse createdRoleDto = _mapper.Map<RoleDtoResponse>(createdRole);
-
-            // Retorna 201 com a nova role mapeada para RoleDTO
-            return CreatedAtAction(nameof(GetRoleById), new { id = createdRoleDto.Id }, createdRoleDto);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateRole(Guid id, [FromBody] UpdateRoleRequest updatedRoleDto)
-        {
-            if (updatedRoleDto == null)
+            if (request == null)
             {
                 return BadRequest("Role não pode ser nula.");
             }
 
-            var roleToUpdate = await _roleService.GetByIdAsync(id);
-            if (roleToUpdate == null)
+            RoleDtoResponse response = await _roleService.CreateRoleAsync(request);
+
+            return CreatedAtAction(nameof(GetRoleById), new { id = response.Id }, response);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateRole(Guid id, [FromBody] UpdateRoleRequest request)
+        {
+            if (request == null)
             {
-                return NotFound("Role não encontrada.");
+                return BadRequest("Role não pode ser nula.");
             }
 
-            // Atualiza apenas as propriedades necessárias
-            _mapper.Map(updatedRoleDto, roleToUpdate); // Atualiza a entidade com os dados do DTO
+            RoleDtoResponse response = await _roleService.UpdateRoleAsync(id, request);
 
-            await _roleService.UpdateAsync(roleToUpdate);
-
-            // Mapeia a entidade Role para RoleDTO
-            var updatedRoleDtoResult = _mapper.Map<RoleDtoResponse>(roleToUpdate);
-
-            // Retorna a role atualizada com status 200 OK
-            return Ok(updatedRoleDtoResult);
+            return Ok(response);
         }
 
         [HttpDelete("{id}")]
@@ -127,9 +72,9 @@ namespace OficinaMotorcycle.API.Controllers
             bool success = await _roleService.DeleteAsync(id);
             if (!success)
             {
-                return NotFound(); // Retorna 404 se a deleção falhar
+                return NotFound(); 
             }
-            return NoContent(); // Retorna 204 se a deleção for bem-sucedida
+            return NoContent();
         }
     }
 }

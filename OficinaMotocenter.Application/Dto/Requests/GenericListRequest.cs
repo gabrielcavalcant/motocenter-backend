@@ -1,14 +1,10 @@
-﻿namespace OficinaMotocenter.Application.Dto.Requests.Permission
+﻿namespace OficinaMotocenter.Application.Dto.Requests
 {
     /// <summary>
-    /// DTO for retrieving a paginated list of permission with optional filters.
+    /// Generic DTO for retrieving a paginated list.
     /// </summary>
-    public class GetListPermissionRequest 
+    public class GenericListRequest
     {
-        /// <summary>
-        /// Optional filter by the name of the permission.
-        /// </summary>
-        public string? Name { get; set; }
 
         /// <summary>
         /// The page number to retrieve, defaulting to 1.
