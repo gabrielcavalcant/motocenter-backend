@@ -28,15 +28,28 @@ namespace OficinaMotocenter.CrossCutting.DependencyInjection
             // Repositórios
             services.AddScoped<IMotorcycleRepository, MotorcycleRepository>();
             services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
+            services.AddScoped<IPermissionRepository, PermissionRepository>();
+
 
             // Serviços
             services.AddScoped<IMotorcycleService, MotorcycleService>();
             services.AddScoped<ICustomerService, CustomerService>();
-
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IPasswordResetService, PasswordResetService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IPermissionService, PermissionService>();
 
             // AutoMapper
             services.AddAutoMapper(typeof(MotorcycleMappingProfile));
             services.AddAutoMapper(typeof(CustomerMappingProfile));
+            services.AddAutoMapper(typeof(UserMappingProfile));
+            services.AddAutoMapper(typeof(RoleMappingProfile));
+            services.AddAutoMapper(typeof(PermissionMappingProfile));
 
 
             // FluentValidation: Registrar validadores

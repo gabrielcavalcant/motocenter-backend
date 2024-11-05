@@ -14,6 +14,10 @@ namespace OficinaMotocenter.Persistence.UnitOfWork
         private AppDbContext _context = null;
         private GenericRepository<Motorcycle> motorcycleRepository = null;
         private GenericRepository<Customer> customerRepository = null;
+        private GenericRepository<User> userRepository = null;
+        private GenericRepository<Role> roleRepository = null;
+        private GenericRepository<Permission> permissionRepository = null;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnitOfWork"/> class with the specified database context.
@@ -27,11 +31,10 @@ namespace OficinaMotocenter.Persistence.UnitOfWork
         /// <summary>
         /// Commits all changes made in the current transaction to the database.
         /// </summary>
-        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task Commit(CancellationToken cancellationToken)
+        public async Task Commit()
         {
-            await _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync();
         }
 
         /// <summary>
@@ -61,6 +64,51 @@ namespace OficinaMotocenter.Persistence.UnitOfWork
                     customerRepository = new GenericRepository<Customer>(_context);
                 }
                 return customerRepository;
+            }
+        }
+
+        /// <summary>
+        /// Provides access to the user repository. Initializes the repository if it hasn't been created yet.
+        /// </summary>
+        public IGenericRepository<User> UserRepository
+        {
+            get
+            {
+                if (userRepository == null)
+                {
+                    userRepository = new GenericRepository<User>(_context);
+                }
+                return userRepository;
+            }
+        }
+
+        /// <summary>
+        /// Provides access to the role repository. Initializes the repository if it hasn't been created yet.
+        /// </summary>
+        public IGenericRepository<Role> RoleRepository
+        {
+            get
+            {
+                if (roleRepository == null)
+                {
+                    roleRepository = new GenericRepository<Role>(_context);
+                }
+                return roleRepository;
+            }
+        }
+
+        /// <summary>
+        /// Provides access to the permission repository. Initializes the repository if it hasn't been created yet.
+        /// </summary>
+        public IGenericRepository<Permission> PermissionRepository
+        {
+            get
+            {
+                if (permissionRepository == null)
+                {
+                    permissionRepository = new GenericRepository<Permission>(_context);
+                }
+                return permissionRepository;
             }
         }
 

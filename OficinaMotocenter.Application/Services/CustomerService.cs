@@ -41,24 +41,22 @@ namespace OficinaMotocenter.Application.Services
         /// Retrieves a customer by their CPF asynchronously.
         /// </summary>
         /// <param name="cpf">The CPF of the customer to retrieve.</param>
-        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>The customer entity, or null if not found.</returns>
-        public async Task<Customer> GetCustomerByCpfAsync(string cpf, CancellationToken cancellationToken)
+        public async Task<Customer> GetCustomerByCpfAsync(string cpf)
         {
-            return await _customerRepository.GetCustomerByCpfAsync(cpf, cancellationToken);
+            return await _customerRepository.GetCustomerByCpfAsync(cpf);
         }
 
         /// <summary>
         /// Executes the creation of a new customer.
         /// </summary>
         /// <param name="request">The request DTO containing customer information.</param>
-        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A response DTO with the details of the created customer.</returns>
-        public async Task<CreateCustomerResponse> CreateCustomerAsync(CreateCustomerRequest request, CancellationToken cancellationToken)
+        public async Task<CreateCustomerResponse> CreateCustomerAsync(CreateCustomerRequest request)
         {
             Customer customer = _mapper.Map<Customer>(request);
             _logger.LogInformation("Creating customer: {@customer}", customer);
-            Customer createdCustomer = await base.CreateAsync(customer, cancellationToken);
+            Customer createdCustomer = await base.CreateAsync(customer);
             return _mapper.Map<CreateCustomerResponse>(createdCustomer);
         }
 
@@ -66,12 +64,11 @@ namespace OficinaMotocenter.Application.Services
         /// Executes the retrieval of a customer by its ID.
         /// </summary>
         /// <param name="customerId">The unique ID of the customer to retrieve.</param>
-        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A response DTO with the details of the customer.</returns>
-        public async Task<GetCustomerByIdResponse> GetCustomerByIdAsync(Guid customerId, CancellationToken cancellationToken)
+        public async Task<GetCustomerByIdResponse> GetCustomerByIdAsync(Guid customerId)
         {
             _logger.LogInformation("Searching customer using GUID: {@id}", customerId);
-            Customer customer = await base.GetByIdAsync(customerId, cancellationToken);
+            Customer customer = await base.GetByIdAsync(customerId);
             return _mapper.Map<GetCustomerByIdResponse>(customer);
         }
 
@@ -102,14 +99,13 @@ namespace OficinaMotocenter.Application.Services
         /// </summary>
         /// <param name="customerId">customer Id</param>
         /// <param name="request">The request DTO containing customer information.</param>
-        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A response DTO with the details of the updated customer.</returns>
-        public async Task<UpdateCustomerResponse> UpdateCustomerAsync(Guid customerId, UpdateCustomerRequest request, CancellationToken cancellationToken)
+        public async Task<UpdateCustomerResponse> UpdateCustomerAsync(Guid customerId, UpdateCustomerRequest request)
         {
-            Customer customer = await base.GetByIdAsync(customerId, cancellationToken);
+            Customer customer = await base.GetByIdAsync(customerId);
             _mapper.Map(request, customer);
-            Customer updatedCustomer = await base.UpdateAsync(customer, cancellationToken);
-            updatedCustomer = await base.GetByIdAsync(updatedCustomer.CustomerId, cancellationToken);
+            Customer updatedCustomer = await base.UpdateAsync(customer);
+            updatedCustomer = await base.GetByIdAsync(updatedCustomer.CustomerId);
             UpdateCustomerResponse response = _mapper.Map<UpdateCustomerResponse>(updatedCustomer);
             return response;
         }
@@ -118,11 +114,10 @@ namespace OficinaMotocenter.Application.Services
         /// Executes the soft delete of a existent customer.
         /// </summary>
         /// <param name="customerId">customer Id</param>
-        /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A boolean result</returns>
-        public async Task<bool> DeleteCustomerAsync(Guid customerId, CancellationToken cancellationToken)
+        public async Task<bool> DeleteCustomerAsync(Guid customerId)
         {
-            bool customerDeleted = await base.DeleteAsync(customerId, cancellationToken);
+            bool customerDeleted = await base.DeleteAsync(customerId);
             return customerDeleted;
         }
     }
