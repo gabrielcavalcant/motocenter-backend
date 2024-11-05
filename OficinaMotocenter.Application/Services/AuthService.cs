@@ -10,12 +10,21 @@ using System.Text;
 
 namespace OficinaMotocenter.Application.Services
 {
+    /// <summary>
+    /// Service responsible for handling authentication operations, including sign-in, sign-up, and token refresh.
+    /// </summary>
     public class AuthService : IAuthService
     {
         private readonly ITokenService _tokenService;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserRepository _userRepository;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthService"/> class.
+        /// </summary>
+        /// <param name="userRepository">Repository for user data access.</param>
+        /// <param name="tokenService">Service for token management.</param>
+        /// <param name="unitOfWork">Unit of work for transaction management.</param>
         public AuthService(IUserRepository userRepository, ITokenService tokenService, IUnitOfWork unitOfWork)
         {
             _userRepository = userRepository;
@@ -23,69 +32,106 @@ namespace OficinaMotocenter.Application.Services
             _unitOfWork = unitOfWork;
         }
 
+        /// <summary>
+        /// Authenticates a user with provided credentials and generates access and refresh tokens.
+        /// </summary>
+        /// <param name="login">The sign-in request containing user credentials.</param>
+        /// <returns>A <see cref="Tokens"/> object with access and refresh tokens, or null if authentication fails.</returns>
         public async Task<Tokens> SignInAsync(SignInRequest login)
         {
-            // Verificar se o usuário existe
             User user = await _userRepository.GetByEmailAsync(login.Email);
             if (user != null && VerifyPasswordHash(login.Hash, user.Hash))
             {
                 Tokens newTokens = _tokenService.GenerateTokens(user);
-                // Atualizar o campo HashedRt com o novo Refresh Token (hash)
                 user.HashedRt = ComputeHash(newTokens.RefreshToken);
 
-                await _userRepository.UpdateAsync(user); // Atualiza o usuário
-                await _unitOfWork.Commit(); // Salva as mudanças
+                await _userRepository.UpdateAsync(user);
+                await _unitOfWork.Commit();
 
                 return newTokens;
             }
-            return null; // Retorna null se o login falhar
+            return null;
         }
 
+        /// <summary>
+        /// Refreshes the user's authentication tokens using the provided refresh token.
+        /// </summary>
+        /// <param name="refresh">The refresh token request containing the refresh token.</param>
+        /// <returns>A <see cref="Tokens"/> object with new access and refresh tokens, or null if the refresh fails.</returns>
         public async Task<Tokens> RefreshAsync(RefreshTokenRequest refresh)
         {
-            // Validar o token existente (refresh token)
             ClaimsPrincipal principal = _tokenService.GetPrincipalFromExpiredToken(refresh.RefreshToken);
             if (principal == null)
             {
-                return null; // Token inválido
+                return null;
             }
 
-            // Obter o ID do usuário do primeiro claim
-            string idString = principal.Claims.FirstOrDefault()?.Value; // Obter o primeiro claim
-
-            // Converter o ID de string para GUID
+            string idString = principal.Claims.FirstOrDefault()?.Value;
             if (!Guid.TryParse(idString, out var userId))
             {
-                return null; // ID inválido
+                return null;
             }
 
-            // Buscar o usuário no banco de dados com base no ID
             User user = await _userRepository.GetByIdAsync(userId);
             if (user == null)
             {
-                return null; // Usuário não encontrado
+                return null;
             }
 
             string computedHash = ComputeHash(refresh.RefreshToken);
-
-            // Comparar o hash do refresh token armazenado com o fornecido
             if (computedHash != user.HashedRt)
             {
-                return null; // Refresh token inválido
+                return null;
             }
 
-            // Gerar novos tokens
             Tokens newTokens = _tokenService.GenerateTokens(user);
-
-            // Atualizar o campo HashedRt com o novo Refresh Token (hash)
             user.HashedRt = ComputeHash(newTokens.RefreshToken);
 
-            await _userRepository.UpdateAsync(user); // Atualiza o usuário
-            await _unitOfWork.Commit(); // Salva as mudanças
+            await _userRepository.UpdateAsync(user);
+            await _unitOfWork.Commit();
 
             return newTokens;
         }
 
+        /// <summary>
+        /// Registers a new user in the system and generates tokens upon successful registration.
+        /// </summary>
+        /// <param name="signUp">The sign-up request containing user registration details.</param>
+        /// <returns>A <see cref="Tokens"/> object with access and refresh tokens, or null if registration fails.</returns>
+        public async Task<Tokens> SignUpAsync(SignUpRequest signUp)
+        {
+            User existingUser = await _userRepository.GetByEmailAsync(signUp.Email);
+            if (existingUser != null)
+            {
+                return null;
+            }
+
+            string passwordHash = HashPassword(signUp.Hash);
+
+            User newUser = new User
+            {
+                Email = signUp.Email,
+                FullName = signUp.FullName,
+                Hash = passwordHash,
+            };
+
+            await _userRepository.AddAsync(newUser);
+            await _unitOfWork.Commit();
+
+            Tokens newTokens = _tokenService.GenerateTokens(newUser);
+            newUser.HashedRt = ComputeHash(newTokens.RefreshToken);
+
+            await _userRepository.UpdateAsync(newUser);
+            await _unitOfWork.Commit();
+
+            return newTokens;
+        }
+
+        /// <summary>
+        /// Computes a hash for a given token using SHA-256 encryption.
+        /// </summary>
+        /// <param name="token">The token to be hashed.</param>
+        /// <returns>A hashed string representation of the token.</returns>
         private string ComputeHash(string token)
         {
             using (var sha256 = SHA256.Create())
@@ -96,42 +142,11 @@ namespace OficinaMotocenter.Application.Services
             }
         }
 
-        public async Task<Tokens> SignUpAsync(SignUpRequest signUp)
-        {
-            // Verificar se o e-mail já está cadastrado
-            User existingUser = await _userRepository.GetByEmailAsync(signUp.Email);
-            if (existingUser != null)
-            {
-                return null;
-            }
-
-            // Gerar o hash da senha
-            string passwordHash = HashPassword(signUp.Hash);
-
-            // Criar o novo usuário
-            User newUser = new User
-            {
-                Email = signUp.Email,
-                FullName = signUp.FullName,
-                Hash = passwordHash,
-            };
-
-            await _userRepository.AddAsync(newUser); // Adiciona o novo usuário
-
-            await _unitOfWork.Commit(); // Salva as mudanças
-
-            // Gerar token para o novo usuário
-            Tokens newTokens = _tokenService.GenerateTokens(newUser);
-            // Atualizar o campo HashedRt com o novo Refresh Token (hash)
-            newUser.HashedRt = ComputeHash(newTokens.RefreshToken);
-
-            await _userRepository.UpdateAsync(newUser); // Atualiza o usuário
-            
-            await _unitOfWork.Commit(); // Salva as mudanças
-
-            return newTokens;
-        }
-
+        /// <summary>
+        /// Hashes a password string using SHA-256 encryption for storage.
+        /// </summary>
+        /// <param name="password">The password to be hashed.</param>
+        /// <returns>A hashed string representation of the password.</returns>
         private string HashPassword(string password)
         {
             using (SHA256 sha256 = SHA256.Create())
@@ -141,6 +156,12 @@ namespace OficinaMotocenter.Application.Services
             }
         }
 
+        /// <summary>
+        /// Verifies that a password matches the stored hashed password.
+        /// </summary>
+        /// <param name="password">The plain text password provided by the user.</param>
+        /// <param name="storedHash">The stored hash to compare against.</param>
+        /// <returns>True if the password matches the stored hash; otherwise, false.</returns>
         private bool VerifyPasswordHash(string password, string storedHash)
         {
             string hashOfInput = HashPassword(password);

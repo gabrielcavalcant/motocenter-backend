@@ -8,31 +8,43 @@ using System.Text;
 
 namespace OficinaMotocenter.Application.Services
 {
+    /// <summary>
+    /// Service responsible for generating and validating JWT tokens for user authentication.
+    /// </summary>
     public class TokenService : ITokenService
     {
         private readonly IConfiguration _configuration;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TokenService"/> class.
+        /// </summary>
+        /// <param name="configuration">Configuration settings for JWT, including secrets and expiration times.</param>
         public TokenService(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
+        /// <summary>
+        /// Generates access and refresh tokens for a specified user.
+        /// </summary>
+        /// <param name="user">The user for whom tokens are generated.</param>
+        /// <returns>A <see cref="Tokens"/> object containing both access and refresh tokens.</returns>
         public Tokens GenerateTokens(User user)
         {
             IConfiguration jwtSettings = _configuration.GetSection("JwtSettings");
             byte[] atSecretKey = Encoding.ASCII.GetBytes(jwtSettings["AccessTokenSecret"]);
             byte[] rtSecretKey = Encoding.ASCII.GetBytes(jwtSettings["RefreshTokenSecret"]);
 
-            // Claims para o Access Token
+            // Claims for Access Token
             var accessTokenClaims = new[]
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()), // Converte para string
+                new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()), // Converts to string
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, "User"),
                 new Claim("fullName", user.FullName)
             };
 
-            // Gerar Access Token
+            // Generate Access Token
             var accessTokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(accessTokenClaims),
@@ -71,18 +83,24 @@ namespace OficinaMotocenter.Application.Services
             };
         }
 
+        /// <summary>
+        /// Retrieves the principal (user information) from an expired token without validating its expiration.
+        /// Useful for obtaining user claims during token renewal.
+        /// </summary>
+        /// <param name="token">The expired JWT token.</param>
+        /// <returns>The <see cref="ClaimsPrincipal"/> representing the token's claims or null if invalid.</returns>
         public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
         {
             IConfigurationSection jwtSettings = _configuration.GetSection("JwtSettings");
             byte[] secretKey = Encoding.ASCII.GetBytes(jwtSettings["RefreshTokenSecret"]);
 
-            TokenValidationParameters tokenValidationParameters = new()
+            var tokenValidationParameters = new TokenValidationParameters
             {
-                ValidateAudience = false, // Não valida o Audience
-                ValidateIssuer = false,   // Não valida o Issuer
-                ValidateIssuerSigningKey = true, // Valida a chave de assinatura
+                ValidateAudience = false, // Do not validate Audience
+                ValidateIssuer = false,   // Do not validate Issuer
+                ValidateIssuerSigningKey = true, // Validate signing key
                 IssuerSigningKey = new SymmetricSecurityKey(secretKey),
-                ValidateLifetime = false // Ignora a expiração do token
+                ValidateLifetime = false // Ignore token expiration
             };
 
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
@@ -92,7 +110,7 @@ namespace OficinaMotocenter.Application.Services
 
                 if (securityToken is not JwtSecurityToken jwtSecurityToken || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    throw new SecurityTokenException("Token inválido");
+                    throw new SecurityTokenException("Invalid token");
                 }
 
                 return principal;
@@ -101,7 +119,7 @@ namespace OficinaMotocenter.Application.Services
             {
                 // Log exception for troubleshooting
                 Console.WriteLine($"Token validation failed: {ex.Message}");
-                return null; // Retorna nulo se o token não for válido
+                return null; // Returns null if the token is invalid
             }
         }
     }

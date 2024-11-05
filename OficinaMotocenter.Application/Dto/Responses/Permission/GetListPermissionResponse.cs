@@ -10,22 +10,12 @@ namespace OficinaMotocenter.Application.Dto.Responses.Permission
     /// DTO for returning a paginated list of permissions. It includes a list of permission,
     /// the current page index, and the total count of permissions.
     /// </summary>
-    public class GetListPermissionResponse
+    public class GetListPermissionResponse : GenericListResponse
     {
         /// <summary>
         /// A list of permissions for the current page.
         /// </summary>
         public List<PermissionDto> Permissions { get; set; }
-
-        /// <summary>
-        /// The current page index being retrieved.
-        /// </summary>
-        public int PageIndex { get; set; }
-
-        /// <summary>
-        /// The total number of permissions in the system.
-        /// </summary>
-        public int TotalCount { get; set; }
     }
 
     /// <summary>

@@ -2,15 +2,28 @@
 
 namespace OficinaMotocenter.Application.Dto.Requests.User
 {
-        public class CreateUserRequest
-        {
-            [Required(ErrorMessage = "O nome da role é obrigatório.")]
-            public string Name { get; set; } // Nome da nova role
+    /// <summary>
+    /// DTO for creating a new user, containing required fields for defining user information.
+    /// </summary>
+    public class CreateUserRequest
+    {
+        /// <summary>
+        /// Gets or sets the name of the user's role.
+        /// </summary>
+        [Required(ErrorMessage = "O nome da role é obrigatório.")]
+        public string Name { get; set; }
 
-            [Required(ErrorMessage = "O email do usuário é obrigatório.")]
-            public string Email { get; set; }
+        /// <summary>
+        /// Gets or sets the email address of the user.
+        /// </summary>
+        [Required(ErrorMessage = "O email do usuário é obrigatório.")]
+        [EmailAddress(ErrorMessage = "O email fornecido não é válido.")]
+        public string Email { get; set; }
 
-            [Required(ErrorMessage = "O nome completo é obrigatório.")]
-            public string FullName { get; set; }
-        }
+        /// <summary>
+        /// Gets or sets the full name of the user.
+        /// </summary>
+        [Required(ErrorMessage = "O nome completo é obrigatório.")]
+        public string FullName { get; set; }
+    }
 }

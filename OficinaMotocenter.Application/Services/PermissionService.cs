@@ -1,17 +1,18 @@
 ﻿using AutoMapper;
 using Microsoft.Extensions.Logging;
 using OficinaMotocenter.Application.Dto.Requests.Permission;
-using OficinaMotocenter.Application.Dto.Responses.Motorcycle;
 using OficinaMotocenter.Application.Dto.Responses.Permission;
 using OficinaMotocenter.Application.Exceptions;
 using OficinaMotocenter.Application.Interfaces.Services;
 using OficinaMotocenter.Domain.Entities;
 using OficinaMotocenter.Domain.Interfaces.Repositories;
 using OficinaMotocenter.Domain.Interfaces.UnitOfWork;
-using System.Threading;
 
 namespace OficinaMotocenter.Application.Services
 {
+    /// <summary>
+    /// Service for managing permissions, including CRUD operations and role association.
+    /// </summary>
     public class PermissionService : GenericService<Permission>, IPermissionService
     {
         private readonly IRoleRepository _roleRepository;
@@ -20,7 +21,14 @@ namespace OficinaMotocenter.Application.Services
         private readonly IMapper _mapper;
         private readonly ILogger<PermissionService> _logger;
 
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PermissionService"/> class.
+        /// </summary>
+        /// <param name="roleRepository">Repository for accessing role data.</param>
+        /// <param name="permissionRepository">Repository for accessing permission data.</param>
+        /// <param name="unitOfWork">Unit of work for managing transactions.</param>
+        /// <param name="mapper">Mapper for entity-DTO conversions.</param>
+        /// <param name="logger">Logger for logging operations.</param>
         public PermissionService(IRoleRepository roleRepository,
                                  IPermissionRepository permissionRepository,
                                  IUnitOfWork unitOfWork,
@@ -34,75 +42,95 @@ namespace OficinaMotocenter.Application.Services
             _logger = logger;
         }
 
+        /// <summary>
+        /// Creates a new permission based on the provided details.
+        /// </summary>
+        /// <param name="request">Details of the permission to create.</param>
+        /// <returns>A <see cref="PermissionDtoResponse"/> containing the created permission details.</returns>
         public async Task<PermissionDtoResponse> CreatePermissionAsync(CreatePermissionRequest request)
         {
-            // Mapeia o DTO para a entidade Permission
             Permission newPermission = _mapper.Map<Permission>(request);
-
-            // Cria a nova Permission usando o serviço
             Permission createdPermission = await CreateAsync(newPermission);
-
-            // Mapeia a entidade criada para o DTO
             return _mapper.Map<PermissionDtoResponse>(createdPermission);
         }
 
+        /// <summary>
+        /// Updates an existing permission based on its identifier and update details.
+        /// </summary>
+        /// <param name="id">Unique identifier of the permission to update.</param>
+        /// <param name="request">Updated permission details.</param>
+        /// <returns>A <see cref="PermissionDtoResponse"/> containing the updated permission details.</returns>
         public async Task<PermissionDtoResponse> UpdatePermissionAsync(Guid id, UpdatePermissionRequest request)
         {
-            Permission PermissionToUpdate = await GetByIdAsync(id);
-            
-            if (PermissionToUpdate == null)
+            Permission permissionToUpdate = await GetByIdAsync(id);
+
+            if (permissionToUpdate == null)
             {
                 throw new InvalidArgumentException("Permission not found");
             }
 
-            // Atualiza apenas as propriedades necessárias
-            _mapper.Map(request, PermissionToUpdate); // Atualiza a entidade com os dados do DTO
-
-            await UpdateAsync(PermissionToUpdate);
-
-            // Mapeia a entidade Permission para PermissionDTO
-            return _mapper.Map<PermissionDtoResponse>(PermissionToUpdate);
+            _mapper.Map(request, permissionToUpdate);
+            await UpdateAsync(permissionToUpdate);
+            return _mapper.Map<PermissionDtoResponse>(permissionToUpdate);
         }
 
+        /// <summary>
+        /// Retrieves a permission by its name.
+        /// </summary>
+        /// <param name="name">Name of the permission.</param>
+        /// <returns>The <see cref="Permission"/> entity if found; otherwise, null.</returns>
         public async Task<Permission> GetByNameAsync(string name)
         {
             return await _permissionRepository.GetByNameAsync(name);
         }
 
-        // Método para adicionar uma Role a uma Permission
+        /// <summary>
+        /// Associates a role with a specific permission.
+        /// </summary>
+        /// <param name="permissionId">Unique identifier of the permission.</param>
+        /// <param name="roleId">Unique identifier of the role to associate.</param>
+        /// <returns>A boolean indicating success or failure of the association.</returns>
         public async Task<bool> AddRoleToPermission(Guid permissionId, Guid roleId)
         {
-            // Busca a permissão pelo ID
             var permission = await GetByIdAsync(permissionId);
 
             if (permission == null)
             {
-                return false; // Retorna falso se a permissão não for encontrada
+                return false;
             }
 
-            // Busca a Role pelo ID
             var role = await _roleRepository.GetByIdAsync(roleId);
             if (role == null)
             {
-                return false; // Retorna falso se a Role não for encontrada
+                return false;
             }
 
-            // Adiciona a Role à Permission, caso ainda não esteja associada
             if (!permission.Roles.Contains(role))
             {
                 permission.Roles.Add(role);
-                await _unitOfWork.Commit(); // Salva as alterações no banco de dados
+                await _unitOfWork.Commit();
             }
 
-            return true; // Retorna verdadeiro se a operação for bem-sucedida
+            return true;
         }
 
+        /// <summary>
+        /// Retrieves a permission by its unique identifier.
+        /// </summary>
+        /// <param name="permissionId">Unique identifier of the permission.</param>
+        /// <returns>A <see cref="PermissionDtoResponse"/> with permission details, or null if not found.</returns>
         public async Task<PermissionDtoResponse> GetPermissionByIdAsync(Guid permissionId)
         {
             Permission permission = await GetByIdAsync(permissionId);
             return _mapper.Map<PermissionDtoResponse>(permission);
         }
 
+        /// <summary>
+        /// Retrieves a paginated list of permissions based on filter criteria.
+        /// </summary>
+        /// <param name="request">Filter criteria and pagination settings.</param>
+        /// <param name="cancellationToken">Token to observe for cancellation requests.</param>
+        /// <returns>A <see cref="GetListPermissionResponse"/> containing the filtered permissions and total count.</returns>
         public async Task<GetListPermissionResponse> GetListPermissionAsync(GetListPermissionRequest request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Get permission list using: {@request}", request);
@@ -120,14 +148,14 @@ namespace OficinaMotocenter.Application.Services
         }
 
         /// <summary>
-        /// Executes the soft delete of a existent permission.
+        /// Executes the soft delete of an existing permission.
         /// </summary>
-        /// <param name="id">permission Id</param>
-        /// <returns>A boolean result</returns>
-        public async Task<bool> DeletePermissionAsync(Guid id )
+        /// <param name="permissionId">Unique identifier of the permission to delete.</param>
+        /// <returns>A boolean result indicating success or failure of the deletion.</returns>
+        public async Task<bool> DeletePermissionAsync(Guid permissionId)
         {
-            bool motorcycleDeleted = await base.DeleteAsync(id);
-            return motorcycleDeleted;
+            bool permissionDeleted = await base.DeleteAsync(permissionId);
+            return permissionDeleted;
         }
     }
 }

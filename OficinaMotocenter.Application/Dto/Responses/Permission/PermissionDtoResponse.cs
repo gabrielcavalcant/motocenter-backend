@@ -2,12 +2,25 @@
 
 namespace OficinaMotocenter.Application.Dto.Responses.Permission
 {
+    /// <summary>
+    /// DTO for returning permission information in responses, including details such as ID, name, and description.
+    /// </summary>
     public class PermissionDtoResponse
     {
-        public Guid PermissionId { get; set; } // ID da permissão
-        public string Name { get; set; } // Nome da permissão
+        /// <summary>
+        /// Gets or sets the unique identifier of the permission.
+        /// </summary>
+        public Guid PermissionId { get; set; }
 
-        [Required(ErrorMessage = "Uma descrição é obrigatório.")]
-        public string Description { get; set; } // Descrição da permissão
+        /// <summary>
+        /// Gets or sets the name of the permission.
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Gets or sets the description of the permission.
+        /// </summary>
+        [Required(ErrorMessage = "Uma descrição é obrigatória.")]
+        public string Description { get; set; }
     }
 }
