@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OficinaMotocenter.Application.Dto.Requests.Permission;
 using OficinaMotocenter.Application.Dto.Responses.Permission;
 using OficinaMotocenter.Application.Interfaces.Services;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace OficinaMotorcycle.API.Controllers
 {
@@ -13,6 +11,7 @@ namespace OficinaMotorcycle.API.Controllers
     /// </summary>
     [ApiController]
     [Route("api/permission")]
+    [Authorize]
     public class PermissionController : Controller
     {
         private readonly IPermissionService _permissionService;

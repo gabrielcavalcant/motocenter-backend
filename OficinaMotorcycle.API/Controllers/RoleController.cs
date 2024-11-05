@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OficinaMotocenter.Application.Dto.Requests.Role;
 using OficinaMotocenter.Application.Dto.Responses.Role;
 using OficinaMotocenter.Application.Dto.Responses.Role.OficinaMotocenter.Application.Dto.Responses;
@@ -11,6 +12,7 @@ namespace OficinaMotorcycle.API.Controllers
     /// </summary>
     [ApiController]
     [Route("api/role")]
+    [Authorize]
     public class RoleController : ControllerBase
     {
         private readonly IRoleService _roleService;

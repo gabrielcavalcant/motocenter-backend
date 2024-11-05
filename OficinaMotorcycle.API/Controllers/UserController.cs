@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using OficinaMotocenter.Application.Dto.Requests.User;
 using OficinaMotocenter.Application.Dto.Responses.User;
 using OficinaMotocenter.Application.Interfaces.Services;
@@ -10,6 +11,7 @@ namespace OficinaMotorcycle.API.Controllers
     /// </summary>
     [ApiController]
     [Route("api/users")]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserService _userService;
