@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using OficinaMotocenter.Domain.Entities.Stock;
 
 namespace OficinaMotocenter.Persistence.Mapping
@@ -13,23 +13,31 @@ namespace OficinaMotocenter.Persistence.Mapping
         {
             builder.HasKey(x => x.ItemId);
 
-            builder.Property(x => x.Name)
+            builder.Property(x => x.Name)   
                    .HasMaxLength(100)
                    .IsRequired();
+
+            builder.Property(x => x.SerialCode)
+           .HasMaxLength(15)
+           .IsRequired();
+
+            builder.Property(x => x.Supplier)
+           .HasMaxLength(100)
+           .IsRequired();
 
             builder.Property(x => x.Description)
                    .HasMaxLength(250);
 
-            builder.Property(x => x.Quantity)
+            builder.Property(x => x.StockQuantity)
                    .IsRequired();
 
-            builder.Property(x => x.DateAdded)
-                   .IsRequired();
+            //builder.Property(x => x.DateAdded)
+            //       .IsRequired();
 
-            builder.HasOne(x => x.Category)
-                   .WithMany()
-                   .HasForeignKey(x => x.CategoryId)
-                   .OnDelete(DeleteBehavior.SetNull);
+            //builder.HasOne(x => x.Category)
+            //       .WithMany()
+            //       .HasForeignKey(x => x.CategoryId)
+            //       .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
