@@ -20,19 +20,5 @@ namespace OficinaMotocenter.Persistence.Repositories
         {
             _appDbContext = context;
         }
-
-        ///// <summary>
-        ///// Retrieves a customer by their CPF.
-        ///// </summary>
-        ///// <param name="cpf">The CPF of the customer to retrieve.</param>
-        ///// <returns>The customer corresponding to the provided CPF.</returns>
-        //public async Task AddItemAsync(IList<Item> itens)
-        //{
-        //    foreach(Item item in itens)
-        //    {
-        //        return await _context.Set<Item>().FirstOrDefaultAsync(item => item.Cpf == cpf);
-
-        //    }
-        //}
     }
 }

@@ -1,10 +1,4 @@
-﻿using OficinaMotocenter.Domain.Entities;
-using OficinaMotocenter.Domain.Entities.Stock;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using OficinaMotocenter.Domain.Entities.Stock;
 
 namespace OficinaMotocenter.Domain.Interfaces.Repositories
 {

@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OficinaMotocenter.Domain.Entities;
+using OficinaMotocenter.Domain.Entities.Stock;
 using OficinaMotocenter.Persistence.Mapping;
 
 namespace OficinaMotocenter.Persistence.Context
@@ -45,6 +46,11 @@ namespace OficinaMotocenter.Persistence.Context
         public DbSet<Permission> Permissions { get; set; }
 
         /// <summary>
+        /// Gets or sets the <see cref="DbSet{TEntity}"/> for the <see cref="Item"/> entity.
+        /// </summary>
+        public DbSet<Item> Itens { get; set; }
+
+        /// <summary>
         /// Configures the Entity Framework model when creating the entities in the database.
         /// This method is called when the context is used for the first time.
         /// </summary>
@@ -57,6 +63,7 @@ namespace OficinaMotocenter.Persistence.Context
             builder.ApplyConfiguration(new RoleConfiguration());
             builder.ApplyConfiguration(new PermissionConfiguration());
             builder.ApplyConfiguration(new TokensConfiguration());
+            builder.ApplyConfiguration(new ItemConfiguration());
             //Add other configurations
         }
     }
