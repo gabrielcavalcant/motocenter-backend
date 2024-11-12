@@ -3,7 +3,7 @@ using OficinaMotocenter.Domain.Entities.Stock;
 
 namespace OficinaMotocenter.Application.Interfaces.Services
 {
-    public interface IInventoryService : IGenericService<Item>
+    public interface IInventoryService
     {
         /// <summary>
         /// Executes the add or remove operation on the stock.
