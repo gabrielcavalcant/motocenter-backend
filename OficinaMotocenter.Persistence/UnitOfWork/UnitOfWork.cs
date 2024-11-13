@@ -17,6 +17,9 @@ namespace OficinaMotocenter.Persistence.UnitOfWork
         private GenericRepository<User> userRepository = null;
         private GenericRepository<Role> roleRepository = null;
         private GenericRepository<Permission> permissionRepository = null;
+        private GenericRepository<Permission> teamRepository = null;
+        private GenericRepository<Permission> teamMemberRepository = null;
+
 
 
         /// <summary>
@@ -112,6 +115,35 @@ namespace OficinaMotocenter.Persistence.UnitOfWork
             }
         }
 
+        /// <summary>
+        /// Provides access to the permission repository. Initializes the repository if it hasn't been created yet.
+        /// </summary>
+        public IGenericRepository<Permission> TeamMemberRepository
+        {
+            get
+            {
+                if (teamMemberRepository == null)
+                {
+                    teamMemberRepository = new GenericRepository<Permission>(_context);
+                }
+                return teamMemberRepository;
+            }
+        }
+
+        /// <summary>
+        /// Provides access to the permission repository. Initializes the repository if it hasn't been created yet.
+        /// </summary>
+        public IGenericRepository<Permission> TeamRepository
+        {
+            get
+            {
+                if (teamRepository == null)
+                {
+                    teamRepository = new GenericRepository<Permission>(_context);
+                }
+                return teamRepository;
+            }
+        }
         private bool disposed = false;
 
         /// <summary>

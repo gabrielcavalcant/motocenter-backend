@@ -4,7 +4,7 @@ namespace OficinaMotocenter.Domain.Entities
 {
     public class TeamMember : BaseEntity
     {
-        public Guid Id { get; set; }
+        public Guid TeamMemberId { get; set; }
         public string Specialty { get; set; }
         
         // Chaves estrangeiras como Guid

@@ -5,7 +5,7 @@ namespace OficinaMotocenter.Domain.Entities
 {
     public class Team : BaseEntity
     {
-        public Guid Id { get; set; }
+        public Guid TeamId { get; set; }
         public string Name { get; set; }
 
         // Relacionamento com TeamMember
