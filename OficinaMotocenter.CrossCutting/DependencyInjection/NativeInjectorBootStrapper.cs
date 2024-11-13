@@ -46,6 +46,8 @@ namespace OficinaMotocenter.CrossCutting.DependencyInjection
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IPermissionService, PermissionService>();
             services.AddScoped<IItemService, ItemService>();
+            services.AddScoped<IInventoryService, InventoryService>();
+
 
 
             // AutoMapper
