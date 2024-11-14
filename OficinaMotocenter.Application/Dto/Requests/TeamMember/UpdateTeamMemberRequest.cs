@@ -1,3 +1,5 @@
+using OficinaMotocenter.Domain.Entities.Enumerations;
+
 namespace OficinaMotocenter.Application.Dto.Requests.TeamMember
 {
     /// <summary>
@@ -6,18 +8,12 @@ namespace OficinaMotocenter.Application.Dto.Requests.TeamMember
     public class UpdateTeamMemberRequest
     {
         /// <summary>
-        /// Gets or sets the specialty of the team member.
+        /// TeamMemberId to updates.
         /// </summary>
-        public string Specialty { get; set; }
-        
+        public Guid TeamMemberId { get; set; }
         /// <summary>
-        /// Gets or sets the ID of the team to which the member belongs.
+        /// Specialty to updates of the team member.
         /// </summary>
-        public Guid TeamId { get; set; }
-
-        /// <summary>
-        /// Gets or sets the ID of the user associated with the team member.
-        /// </summary>
-        public Guid UserId { get; set; }
+        public TeamMemberSpecialty Specialty { get; set; }
     }
 }

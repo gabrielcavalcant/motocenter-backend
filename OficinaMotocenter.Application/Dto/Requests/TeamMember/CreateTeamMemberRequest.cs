@@ -1,3 +1,5 @@
+using OficinaMotocenter.Domain.Entities.Enumerations;
+
 namespace OficinaMotocenter.Application.Dto.Requests.TeamMember
 {
     /// <summary>
@@ -8,7 +10,7 @@ namespace OficinaMotocenter.Application.Dto.Requests.TeamMember
         /// <summary>
         /// Gets or sets the specialty of the team member.
         /// </summary>
-        public string Specialty { get; set; }
+        public TeamMemberSpecialty Specialty { get; set; }
         
         /// <summary>
         /// Gets or sets the ID of the team to which the member belongs.
