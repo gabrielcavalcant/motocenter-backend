@@ -11,7 +11,7 @@
             /// <summary>
             /// A list of roles for the current page.
             /// </summary>
-            public List<RoleDto> Role { get; set; }
+            public List<RoleDto> Roles { get; set; }
         }
 
         /// <summary>

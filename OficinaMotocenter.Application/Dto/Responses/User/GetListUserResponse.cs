@@ -9,7 +9,7 @@
         /// <summary>
         /// A list of users for the current page.
         /// </summary>
-        public List<UserDto> User { get; set; }
+        public List<UserDto> Users { get; set; }
     }
 
     /// <summary>

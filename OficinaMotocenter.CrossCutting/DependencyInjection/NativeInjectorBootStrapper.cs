@@ -31,6 +31,8 @@ namespace OficinaMotocenter.CrossCutting.DependencyInjection
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IPermissionRepository, PermissionRepository>();
+            services.AddScoped<IItemRepository, ItemRepository>();
+
 
 
             // Serviços
@@ -43,6 +45,10 @@ namespace OficinaMotocenter.CrossCutting.DependencyInjection
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IPermissionService, PermissionService>();
+            services.AddScoped<IItemService, ItemService>();
+            services.AddScoped<IInventoryService, InventoryService>();
+
+
 
             // AutoMapper
             services.AddAutoMapper(typeof(MotorcycleMappingProfile));
@@ -50,6 +56,7 @@ namespace OficinaMotocenter.CrossCutting.DependencyInjection
             services.AddAutoMapper(typeof(UserMappingProfile));
             services.AddAutoMapper(typeof(RoleMappingProfile));
             services.AddAutoMapper(typeof(PermissionMappingProfile));
+            services.AddAutoMapper(typeof(ItemMappingProfile));
 
 
             // FluentValidation: Registrar validadores

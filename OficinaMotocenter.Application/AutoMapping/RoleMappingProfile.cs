@@ -23,12 +23,12 @@ namespace OficinaMotocenter.Application.AutoMapping
             // Mapeamento de UpdateRoleRequest para Role
             CreateMap<UpdateRoleRequest, Role>();
 
-            // Map Motorcycle to MotorcycleDto (for use in paginated responses)
+            // Map Role to RoleDto (for use in paginated responses)
             CreateMap<Role, RoleDto>();
 
             // Optional: Mapping for paginated responses if needed
             CreateMap<List<Role>, GetListRoleResponse>()
-                .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src)); // Maps List<Permission> to List<PermissionDto>
+                .ForMember(dest => dest.Roles, opt => opt.MapFrom(src => src)); // Maps List<Role> to List<RoleDto>
         }
     }
 }

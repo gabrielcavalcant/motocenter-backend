@@ -1,4 +1,5 @@
 ﻿using OficinaMotocenter.Domain.Entities;
+using OficinaMotocenter.Domain.Entities.Stock;
 using OficinaMotocenter.Domain.Interfaces.Repositories;
 
 namespace OficinaMotocenter.Domain.Interfaces.UnitOfWork
@@ -33,6 +34,11 @@ namespace OficinaMotocenter.Domain.Interfaces.UnitOfWork
         /// Gets the repository for managing <see cref="Permission"/> entities.
         /// </summary>
         IGenericRepository<Permission> PermissionRepository { get; }
+
+        /// <summary>
+        /// Gets the repository for managing <see cref="Permission"/> entities.
+        /// </summary>
+        IGenericRepository<Item> ItemRepository { get; }
 
         /// <summary>
         /// Commits all changes made in the current transaction, ensuring data consistency.
