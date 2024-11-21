@@ -1,4 +1,5 @@
 ﻿using OficinaMotocenter.Domain.Entities;
+using OficinaMotocenter.Domain.Entities.Stock;
 using OficinaMotocenter.Domain.Interfaces.Repositories;
 using OficinaMotocenter.Domain.Interfaces.UnitOfWork;
 using OficinaMotocenter.Persistence.Context;
@@ -19,7 +20,7 @@ namespace OficinaMotocenter.Persistence.UnitOfWork
         private GenericRepository<Permission> permissionRepository = null;
         private GenericRepository<Permission> teamRepository = null;
         private GenericRepository<Permission> teamMemberRepository = null;
-
+        private GenericRepository<Item> itemRepository = null;
 
 
         /// <summary>
@@ -144,6 +145,21 @@ namespace OficinaMotocenter.Persistence.UnitOfWork
                 return teamRepository;
             }
         }
+
+        /// Provides access to the item repository. Initializes the repository if it hasn't been created yet.
+        /// </summary>
+        public IGenericRepository<Item> ItemRepository
+        {
+            get
+            {
+                if (itemRepository == null)
+                {
+                    itemRepository = new GenericRepository<Item>(_context);
+                }
+                return itemRepository;
+            }
+        }
+
         private bool disposed = false;
 
         /// <summary>

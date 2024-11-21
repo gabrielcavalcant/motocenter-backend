@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OficinaMotocenter.Domain.Entities;
+using OficinaMotocenter.Domain.Entities.Stock;
 using OficinaMotocenter.Persistence.Mapping;
 
 namespace OficinaMotocenter.Persistence.Context
@@ -51,6 +52,11 @@ namespace OficinaMotocenter.Persistence.Context
         /// </summary>
         public DbSet<TeamMember> TeamMembers { get; set; }
 
+        /// Gets or sets the <see cref="DbSet{TEntity}"/> for the <see cref="Item"/> entity.
+        /// </summary>
+        public DbSet<Item> Items { get; set; }
+
+
         /// <summary>
         /// Configures the Entity Framework model when creating the entities in the database.
         /// This method is called when the context is used for the first time.
@@ -66,8 +72,11 @@ namespace OficinaMotocenter.Persistence.Context
             builder.ApplyConfiguration(new TokensConfiguration());
             builder.ApplyConfiguration(new TeamConfiguration());
             builder.ApplyConfiguration(new TeamMemberConfiguration());
-
+            builder.ApplyConfiguration(new ItemConfiguration());
+            
             base.OnModelCreating(builder);
+            builder.ApplyConfiguration(new ItemConfiguration());
+            //Add other configurations
         }
     }
 }

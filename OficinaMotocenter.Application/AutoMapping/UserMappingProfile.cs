@@ -33,7 +33,7 @@ namespace OficinaMotocenter.Application.AutoMapping
 
             // Optional: Mapping for paginated responses if needed
             CreateMap<List<User>, GetListUserResponse>()
-                .ForMember(dest => dest.User, opt => opt.MapFrom(src => src)); // Maps List<User> to List<UserDto>
+                .ForMember(dest => dest.Users, opt => opt.MapFrom(src => src)); // Maps List<User> to List<UserDto>
         }
     }
 }
