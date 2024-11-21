@@ -75,7 +75,6 @@ namespace OficinaMotocenter.Persistence.Context
             builder.ApplyConfiguration(new ItemConfiguration());
             
             base.OnModelCreating(builder);
-            builder.ApplyConfiguration(new ItemConfiguration());
             //Add other configurations
         }
     }
