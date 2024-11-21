@@ -38,12 +38,12 @@ namespace OficinaMotocenter.Domain.Interfaces.UnitOfWork
                 /// <summary>
         /// Gets the repository for managing <see cref="Team"/> entities.
         /// </summary>
-        IGenericRepository<Permission> TeamRepository { get; }
+        IGenericRepository<Team> TeamRepository { get; }
 
                 /// <summary>
         /// Gets the repository for managing <see cref="TeamMember"/> entities.
         /// </summary>
-        IGenericRepository<Permission> TeamMemberRepository { get; }
+        IGenericRepository<TeamMember> TeamMemberRepository { get; }
 
         /// <summary>
         /// Gets the repository for managing <see cref="Permission"/> entities.

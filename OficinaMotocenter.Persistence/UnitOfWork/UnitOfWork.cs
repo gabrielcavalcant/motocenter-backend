@@ -18,8 +18,8 @@ namespace OficinaMotocenter.Persistence.UnitOfWork
         private GenericRepository<User> userRepository = null;
         private GenericRepository<Role> roleRepository = null;
         private GenericRepository<Permission> permissionRepository = null;
-        private GenericRepository<Permission> teamRepository = null;
-        private GenericRepository<Permission> teamMemberRepository = null;
+        private GenericRepository<Team> teamRepository = null;
+        private GenericRepository<TeamMember> teamMemberRepository = null;
         private GenericRepository<Item> itemRepository = null;
 
 
@@ -119,13 +119,13 @@ namespace OficinaMotocenter.Persistence.UnitOfWork
         /// <summary>
         /// Provides access to the permission repository. Initializes the repository if it hasn't been created yet.
         /// </summary>
-        public IGenericRepository<Permission> TeamMemberRepository
+        public IGenericRepository<TeamMember> TeamMemberRepository
         {
             get
             {
                 if (teamMemberRepository == null)
                 {
-                    teamMemberRepository = new GenericRepository<Permission>(_context);
+                    teamMemberRepository = new GenericRepository<TeamMember>(_context);
                 }
                 return teamMemberRepository;
             }
@@ -134,13 +134,13 @@ namespace OficinaMotocenter.Persistence.UnitOfWork
         /// <summary>
         /// Provides access to the permission repository. Initializes the repository if it hasn't been created yet.
         /// </summary>
-        public IGenericRepository<Permission> TeamRepository
+        public IGenericRepository<Team> TeamRepository
         {
             get
             {
                 if (teamRepository == null)
                 {
-                    teamRepository = new GenericRepository<Permission>(_context);
+                    teamRepository = new GenericRepository<Team>(_context);
                 }
                 return teamRepository;
             }
