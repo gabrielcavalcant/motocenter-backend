@@ -2,6 +2,7 @@
 using OficinaMotocenter.Domain.Entities;
 using OficinaMotocenter.Domain.Interfaces.Repositories;
 using OficinaMotocenter.Persistence.Context;
+using System.Linq.Expressions;
 
 namespace OficinaMotocenter.Persistence.Repositories
 {
@@ -39,9 +40,19 @@ namespace OficinaMotocenter.Persistence.Repositories
         /// </summary>
         /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>A query that returns non-deleted entities.</returns>
-        public IQueryable<T> GetAll(CancellationToken cancellationToken)
+        public IQueryable<T> GetAll(CancellationToken cancellationToken, params Expression<Func<T, object>>[] includes)
         {
-            return _dbSet.Where(e => !e.DateDeleted.HasValue);
+            IQueryable<T> query = _dbSet.Where(e => !e.DateDeleted.HasValue);
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            return query;
         }
 
         /// <summary>

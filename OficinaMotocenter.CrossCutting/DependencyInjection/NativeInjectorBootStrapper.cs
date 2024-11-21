@@ -31,8 +31,9 @@ namespace OficinaMotocenter.CrossCutting.DependencyInjection
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IPermissionRepository, PermissionRepository>();
+            services.AddScoped<ITeamRepository, TeamRepository>();
+            services.AddScoped<ITeamMemberRepository, TeamMemberRepository>();
             services.AddScoped<IItemRepository, ItemRepository>();
-
 
 
             // Serviços
@@ -45,9 +46,10 @@ namespace OficinaMotocenter.CrossCutting.DependencyInjection
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IPermissionService, PermissionService>();
+            services.AddScoped<ITeamService, TeamService>();
+            services.AddScoped<ITeamMemberService, TeamMemberService>();
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<IInventoryService, InventoryService>();
-
 
 
             // AutoMapper
@@ -56,6 +58,8 @@ namespace OficinaMotocenter.CrossCutting.DependencyInjection
             services.AddAutoMapper(typeof(UserMappingProfile));
             services.AddAutoMapper(typeof(RoleMappingProfile));
             services.AddAutoMapper(typeof(PermissionMappingProfile));
+            services.AddAutoMapper(typeof(TeamMappingProfile));
+            services.AddAutoMapper(typeof(TeamMemberMappingProfile));
             services.AddAutoMapper(typeof(ItemMappingProfile));
 
 

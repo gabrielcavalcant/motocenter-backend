@@ -1,4 +1,6 @@
-﻿namespace OficinaMotocenter.Domain.Interfaces.Repositories
+﻿using System.Linq.Expressions;
+
+namespace OficinaMotocenter.Domain.Interfaces.Repositories
 {
     /// <summary>
     /// Defines a generic repository interface for performing CRUD operations.
@@ -18,7 +20,7 @@
         /// </summary>
         /// <param name="cancellationToken">Token to cancel the operation.</param>
         /// <returns>An IQueryable of all entities.</returns>
-        IQueryable<T> GetAll(CancellationToken cancellationToken);
+        IQueryable<T> GetAll(CancellationToken cancellationToken, params Expression<Func<T, object>>[] includes);
 
         /// <summary>
         /// Asynchronously adds a new entity to the repository.

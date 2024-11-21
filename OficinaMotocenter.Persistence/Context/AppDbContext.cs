@@ -27,18 +27,15 @@ namespace OficinaMotocenter.Persistence.Context
         /// </summary>
         public DbSet<Customer> Customers { get; set; }
 
-
         /// <summary>
         /// Gets or sets the <see cref="DbSet{TEntity}"/> for the <see cref="User"/> entity.
         /// </summary>
         public DbSet<User> Users { get; set; }
 
-
         /// <summary>
         /// Gets or sets the <see cref="DbSet{TEntity}"/> for the <see cref="Role"/> entity.
         /// </summary>
         public DbSet<Role> Roles { get; set; }
-
 
         /// <summary>
         /// Gets or sets the <see cref="DbSet{TEntity}"/> for the <see cref="Permission"/> entity.
@@ -46,9 +43,19 @@ namespace OficinaMotocenter.Persistence.Context
         public DbSet<Permission> Permissions { get; set; }
 
         /// <summary>
+        /// Gets or sets the <see cref="DbSet{TEntity}"/> for the <see cref="Team"/> entity.
+        /// </summary>
+        public DbSet<Team> Teams { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="DbSet{TEntity}"/> for the <see cref="TeamMember"/> entity.
+        /// </summary>
+        public DbSet<TeamMember> TeamMembers { get; set; }
+
         /// Gets or sets the <see cref="DbSet{TEntity}"/> for the <see cref="Item"/> entity.
         /// </summary>
-        public DbSet<Item> Itens { get; set; }
+        public DbSet<Item> Items { get; set; }
+
 
         /// <summary>
         /// Configures the Entity Framework model when creating the entities in the database.
@@ -63,6 +70,11 @@ namespace OficinaMotocenter.Persistence.Context
             builder.ApplyConfiguration(new RoleConfiguration());
             builder.ApplyConfiguration(new PermissionConfiguration());
             builder.ApplyConfiguration(new TokensConfiguration());
+            builder.ApplyConfiguration(new TeamConfiguration());
+            builder.ApplyConfiguration(new TeamMemberConfiguration());
+            builder.ApplyConfiguration(new ItemConfiguration());
+            
+            base.OnModelCreating(builder);
             builder.ApplyConfiguration(new ItemConfiguration());
             //Add other configurations
         }

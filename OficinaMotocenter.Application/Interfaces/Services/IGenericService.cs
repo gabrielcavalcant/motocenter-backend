@@ -28,7 +28,8 @@ namespace OficinaMotocenter.Application.Interfaces.Services
             Expression<Func<T, bool>> filter = null,
             Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
             int? skip = null,
-            int? take = null);
+            int? take = null,
+            params Expression<Func<T, object>>[] includes);
 
         /// <summary>
         /// Asynchronously creates a new entity.
