@@ -14,7 +14,8 @@ namespace OficinaMotocenter.Application.AutoMapping
         public TeamMappingProfile()
         {
             // Mapeamento de Team para TeamDtoResponse
-            CreateMap<Team, TeamDtoResponse>();
+            CreateMap<Team, TeamDtoResponse>()
+                .ForMember(dest => dest.TeamMembers, opt => opt.MapFrom(src => src.Members));
 
             // Mapeamento de CreateTeamRequest para Team
             CreateMap<CreateTeamRequest, Team>();

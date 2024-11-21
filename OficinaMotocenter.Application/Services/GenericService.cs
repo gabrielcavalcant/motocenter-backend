@@ -65,11 +65,21 @@ namespace OficinaMotocenter.Application.Services
                    Expression<Func<T, bool>> filter = null,
                    Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
                    int? skip = null,
-                   int? take = null)
+                   int? take = null,
+                   params Expression<Func<T, object>>[] includes)
         {
             _logger.LogInformation("Retrieving all entities of type {EntityType} with filter {Filter}.", typeof(T).Name, filter);
 
             IQueryable<T> query = _genericRepository.GetAll(cancellationToken);
+
+            if (includes != null)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+                _logger.LogInformation("Applied includes to the query.");
+            }
 
             if (filter != null)
             {

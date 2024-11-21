@@ -1,9 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OficinaMotocenter.Application.Dto.Requests.TeamMember;
+using OficinaMotocenter.Application.Dto.Responses.Motorcycle;
 using OficinaMotocenter.Application.Dto.Responses.TeamMember;
 using OficinaMotocenter.Application.Dto.Responses.TeamMember.OficinaMotocenter.Application.Dto.Responses;
+using OficinaMotocenter.Application.Exceptions;
 using OficinaMotocenter.Application.Interfaces.Services;
+using OficinaMotocenter.Application.Services;
 
 namespace OficinaMotorcycle.API.Controllers
 {
@@ -38,12 +41,21 @@ namespace OficinaMotorcycle.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CreateTeamMemberRequest request)
         {
-            _logger.LogInformation("Request initiated for creating a new team member");
+            try
+            {
+                _logger.LogInformation("Request initiated for creating a new team member");
 
-            TeamMemberDtoResponse response = await _teamMemberService.CreateTeamMemberAsync(request);
+                TeamMemberDtoResponse response = await _teamMemberService.CreateTeamMemberAsync(request);
 
-            _logger.LogInformation("Response: {@response}", response);
-            return CreatedAtAction(nameof(Get), new { teamMemberId = response.TeamMemberId }, response);
+                _logger.LogInformation("Response: {@response}", response);
+                return CreatedAtAction(nameof(Get), new { teamMemberId = response.TeamMemberId }, response);
+            }
+            catch (InvalidArgumentException ex)
+            {
+                _logger.LogError(ex, "Invalid argument provided: {Message}", ex.Message);
+                return NotFound(new { Message = ex.Message, StackTrace = ex.StackTrace });
+            }
+
         }
 
         /// <summary>

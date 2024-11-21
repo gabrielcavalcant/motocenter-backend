@@ -7,6 +7,7 @@ using OficinaMotocenter.Application.Dto.Responses.TeamMember;
 using OficinaMotocenter.Application.Dto.Requests.TeamMember;
 using OficinaMotocenter.Domain.Interfaces.UnitOfWork;
 using OficinaMotocenter.Application.Dto.Responses.TeamMember.OficinaMotocenter.Application.Dto.Responses;
+using OficinaMotocenter.Application.Exceptions;
 
 namespace OficinaMotocenter.Application.Services
 {
@@ -46,6 +47,12 @@ namespace OficinaMotocenter.Application.Services
         /// <returns>A response DTO with the details of the created team member.</returns>
         public async Task<TeamMemberDtoResponse> CreateTeamMemberAsync(CreateTeamMemberRequest request)
         {
+            User user = await _userService.GetByIdAsync(request.UserId);
+            if (user == null) 
+            {
+                _logger.LogWarning("User not found", request.UserId);
+                throw new InvalidArgumentException("User not found");
+            }
             TeamMember teamMember = _mapper.Map<TeamMember>(request);
             _logger.LogInformation("Creating team member: {@teamMember}", teamMember);
             TeamMember createdTeamMember = await CreateAsync(teamMember);
@@ -76,7 +83,7 @@ namespace OficinaMotocenter.Application.Services
 
             IList<TeamMember> teamMemberList = await GetAllAsync(
                 cancellationToken,
-                filter: m => (string.IsNullOrEmpty(request.Specialty) || m.Specialty.Contains(request.Specialty)),
+                filter: m => (!request.Specialty.HasValue || m.Specialty == request.Specialty),
                 skip: (request.PageIndex - 1) * request.PageSize,
                 take: request.PageSize
             );

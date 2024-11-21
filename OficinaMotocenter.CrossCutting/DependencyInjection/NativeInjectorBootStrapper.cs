@@ -46,7 +46,7 @@ namespace OficinaMotocenter.CrossCutting.DependencyInjection
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IPermissionService, PermissionService>();
             services.AddScoped<ITeamService, TeamService>();
-            // services.AddScoped<ITeamMemberService, TeamMemberService>();
+            services.AddScoped<ITeamMemberService, TeamMemberService>();
 
             // AutoMapper
             services.AddAutoMapper(typeof(MotorcycleMappingProfile));

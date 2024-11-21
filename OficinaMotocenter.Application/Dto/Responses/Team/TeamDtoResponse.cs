@@ -1,3 +1,5 @@
+using OficinaMotocenter.Application.Dto.Responses.TeamMember;
+
 namespace OficinaMotocenter.Application.Dto.Responses.Team
 {
     /// <summary>
@@ -14,5 +16,7 @@ namespace OficinaMotocenter.Application.Dto.Responses.Team
         /// Gets or sets the name of the Team.
         /// </summary>
         public string Name { get; set; } // Team name
+
+        public IList<TeamMemberDtoResponse> TeamMembers { get; set; }
     }
 }

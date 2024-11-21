@@ -8,6 +8,7 @@ using OficinaMotocenter.Application.Interfaces.Services;
 using OficinaMotocenter.Domain.Entities;
 using OficinaMotocenter.Domain.Interfaces.Repositories;
 using OficinaMotocenter.Domain.Interfaces.UnitOfWork;
+using System.Linq.Expressions;
 
 namespace OficinaMotocenter.Application.Services
 {
@@ -96,11 +97,9 @@ namespace OficinaMotocenter.Application.Services
                 return false;
             }
 
-            if (!team.Members.Contains(teamMember))
-            {
-                team.Members.Add(teamMember);
-                await _unitOfWork.Commit();
-            }
+            team.Members.Add(teamMember);
+            await _teamRepository.UpdateAsync(team);
+            await _unitOfWork.Commit();
 
             return true;
         }
@@ -129,6 +128,7 @@ namespace OficinaMotocenter.Application.Services
             IList<Team> teamList = await GetAllAsync(
                 cancellationToken,
                 filter: m => (string.IsNullOrEmpty(request.Name) || m.Name.Contains(request.Name)),
+                includes: new Expression<Func<Team, object>>[] { t => t.Members },
                 skip: (request.PageIndex - 1) * request.PageSize,
                 take: request.PageSize
             );

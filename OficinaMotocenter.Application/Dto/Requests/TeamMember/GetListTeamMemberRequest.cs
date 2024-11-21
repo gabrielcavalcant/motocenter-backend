@@ -1,3 +1,5 @@
+using OficinaMotocenter.Domain.Entities.Enumerations;
+
 namespace OficinaMotocenter.Application.Dto.Requests.TeamMember
 {
     /// <summary>
@@ -8,7 +10,7 @@ namespace OficinaMotocenter.Application.Dto.Requests.TeamMember
         /// <summary>
         /// Optional filter by the Specialty of the Team.
         /// </summary>
-        public string? Specialty { get; set; }
+        public TeamMemberSpecialty? Specialty { get; set; }
 
     }
 }
