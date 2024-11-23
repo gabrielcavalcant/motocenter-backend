@@ -14,5 +14,8 @@ namespace OficinaMotocenter.Application.Dto.Responses.TeamMember
         /// Gets or sets the name of the TeamMember.
         /// </summary>
         public string Specialty { get; set; } // TeamMember name
+
+        public Guid UserId { get; set; }
+
     }
 }

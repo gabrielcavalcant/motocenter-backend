@@ -24,5 +24,10 @@ namespace OficinaMotocenter.Persistence.Repositories
                 .Include(t => t.Members) // Carrega os membros associados
                 .FirstOrDefaultAsync(t => t.TeamId == id);
         }
+
+        public IQueryable<Team> Query()
+        {
+            return _appDbContext.Teams.AsQueryable();
+        }
     }
 }

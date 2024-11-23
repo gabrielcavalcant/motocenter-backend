@@ -11,7 +11,7 @@ namespace OficinaMotocenter.Application.Dto.Responses.Team
             /// <summary>
             /// A list of Teams for the current page.
             /// </summary>
-            public List<TeamDtoResponse> Team { get; set; }
+            public List<TeamDtoResponse> Teams { get; set; }
         }
     }
 

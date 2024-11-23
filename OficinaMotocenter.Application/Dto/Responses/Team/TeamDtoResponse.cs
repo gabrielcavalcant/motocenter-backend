@@ -17,6 +17,6 @@ namespace OficinaMotocenter.Application.Dto.Responses.Team
         /// </summary>
         public string Name { get; set; } // Team name
 
-        public IList<TeamMemberDtoResponse> TeamMembers { get; set; }
+        public List<TeamMemberDtoResponse> Members { get; set; }
     }
 }

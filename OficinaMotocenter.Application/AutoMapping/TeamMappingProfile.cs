@@ -2,6 +2,7 @@ using AutoMapper;
 using OficinaMotocenter.Application.Dto.Requests.Team;
 using OficinaMotocenter.Application.Dto.Responses.Team;
 using OficinaMotocenter.Application.Dto.Responses.Team.OficinaMotocenter.Application.Dto.Responses;
+using OficinaMotocenter.Application.Dto.Responses.TeamMember;
 using OficinaMotocenter.Domain.Entities;
 
 namespace OficinaMotocenter.Application.AutoMapping
@@ -15,7 +16,7 @@ namespace OficinaMotocenter.Application.AutoMapping
         {
             // Mapeamento de Team para TeamDtoResponse
             CreateMap<Team, TeamDtoResponse>()
-                .ForMember(dest => dest.TeamMembers, opt => opt.MapFrom(src => src.Members));
+                .ForMember(dest => dest.Members, opt => opt.MapFrom(src => src.Members));
 
             // Mapeamento de CreateTeamRequest para Team
             CreateMap<CreateTeamRequest, Team>();
@@ -28,7 +29,11 @@ namespace OficinaMotocenter.Application.AutoMapping
 
             // Optional: Mapping for paginated responses if needed
             CreateMap<List<Team>, GetListTeamResponse>()
-                .ForMember(dest => dest.Team, opt => opt.MapFrom(src => src)); // Maps List<Permission> to List<PermissionDto>
+                .ForMember(dest => dest.Teams, opt => opt.MapFrom(src => src)); // Maps List<Permission> to List<PermissionDto>
+
+            CreateMap<Team, TeamDtoResponse>();
+            CreateMap<TeamMember, TeamMemberDtoResponse>()
+                .ForMember(dest => dest.Specialty, opt => opt.MapFrom(src => src.Specialty.ToString()));
         }
     }
 }
