@@ -9,6 +9,7 @@ namespace OficinaMotocenter.Domain.Interfaces.Repositories
     /// </summary>
     public interface ITeamRepository : IGenericRepository<Team>
     {
-       
+        IQueryable<Team> Query();
+
     }
 }

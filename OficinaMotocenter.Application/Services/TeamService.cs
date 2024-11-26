@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OficinaMotocenter.Application.Dto.Requests.Team;
 using OficinaMotocenter.Application.Dto.Responses.Team;
@@ -123,18 +124,22 @@ namespace OficinaMotocenter.Application.Services
         /// <returns>A <see cref="GetListTeamResponse"/> containing the filtered teams and total count.</returns>
         public async Task<GetListTeamResponse> GetListTeamAsync(GetListTeamRequest request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Get team list using: {@request}", request);
+            var query = _teamRepository.Query()
+                .Include(t => t.Members)
+                .ThenInclude(m => m.User); // Inclua outros dados relacionados, se necessário.
 
-            IList<Team> teamList = await GetAllAsync(
-                cancellationToken,
-                filter: m => (string.IsNullOrEmpty(request.Name) || m.Name.Contains(request.Name)),
-                includes: new Expression<Func<Team, object>>[] { t => t.Members },
-                skip: (request.PageIndex - 1) * request.PageSize,
-                take: request.PageSize
-            );
+            // Filtrar, paginar ou ordenar, se necessário.
+            var teams = await query
+                .Skip((request.PageIndex - 1) * request.PageSize)
+                .Take(request.PageSize)
+                .ToListAsync(cancellationToken);
 
-            GetListTeamResponse response = _mapper.Map<GetListTeamResponse>(teamList);
-            response.TotalCount = teamList.Count;
+            var response = new GetListTeamResponse
+            {
+                Teams = _mapper.Map<List<TeamDtoResponse>>(teams),
+                TotalCount = await query.CountAsync(cancellationToken)
+            };
+
             return response;
         }
 
