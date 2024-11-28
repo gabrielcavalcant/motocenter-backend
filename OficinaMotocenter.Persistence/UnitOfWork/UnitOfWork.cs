@@ -21,6 +21,7 @@ namespace OficinaMotocenter.Persistence.UnitOfWork
         private GenericRepository<Team> teamRepository = null;
         private GenericRepository<TeamMember> teamMemberRepository = null;
         private GenericRepository<Item> itemRepository = null;
+        private GenericRepository<Maintenance> maintenanceRepository = null;
 
 
         /// <summary>
@@ -157,6 +158,20 @@ namespace OficinaMotocenter.Persistence.UnitOfWork
                     itemRepository = new GenericRepository<Item>(_context);
                 }
                 return itemRepository;
+            }
+        }
+
+        /// Provides access to the maintenance repository. Initializes the repository if it hasn't been created yet.
+        /// </summary>
+        public IGenericRepository<Maintenance> MaintenanceRepository
+        {
+            get
+            {
+                if (maintenanceRepository == null)
+                {
+                    maintenanceRepository = new GenericRepository<Maintenance>(_context);
+                }
+                return maintenanceRepository;
             }
         }
 

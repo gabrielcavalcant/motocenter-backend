@@ -46,9 +46,14 @@ namespace OficinaMotocenter.Domain.Interfaces.UnitOfWork
         IGenericRepository<TeamMember> TeamMemberRepository { get; }
 
         /// <summary>
-        /// Gets the repository for managing <see cref="Permission"/> entities.
+        /// Gets the repository for managing <see cref="Item"/> entities.
         /// </summary>
         IGenericRepository<Item> ItemRepository { get; }
+
+        /// <summary>
+        /// Gets the repository for managing <see cref="Maintenance"/> entities.
+        /// </summary>
+        IGenericRepository<Maintenance> MaintenanceRepository { get; }
 
         /// <summary>
         /// Commits all changes made in the current transaction, ensuring data consistency.
