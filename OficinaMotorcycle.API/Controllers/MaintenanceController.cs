@@ -74,7 +74,7 @@ namespace OficinaMotorcycle.API.Controllers
 
             MaintenanceDtoResponse response = await _maintenanceService.CreateMaintenanceAsync(request);
 
-            return CreatedAtAction(nameof(GetMaintenanceById), new { id = response.Id }, response);
+            return CreatedAtAction(nameof(GetMaintenanceById), new { id = response.MaintenanceId }, response);
         }
 
         /// <summary>
