@@ -28,12 +28,12 @@ namespace OficinaMotorcycle.API.Controllers
         /// <summary>
         /// Retrieves a maintenance record by its unique identifier.
         /// </summary>
-        /// <param name="id">The unique identifier of the maintenance record.</param>
+        /// <param name="maintenanceId">The unique identifier of the maintenance record.</param>
         /// <returns>An <see cref="IActionResult"/> containing the maintenance details or NotFound if not found.</returns>
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetMaintenanceById(Guid id)
+        [HttpGet("{maintenanceId}")]
+        public async Task<IActionResult> GetMaintenanceById(Guid maintenanceId)
         {
-            MaintenanceDtoResponse response = await _maintenanceService.GetMaintenanceByIdAsync(id);
+            MaintenanceDtoResponse response = await _maintenanceService.GetMaintenanceByIdAsync(maintenanceId);
 
             if (response == null)
             {
@@ -74,24 +74,24 @@ namespace OficinaMotorcycle.API.Controllers
 
             MaintenanceDtoResponse response = await _maintenanceService.CreateMaintenanceAsync(request);
 
-            return CreatedAtAction(nameof(GetMaintenanceById), new { id = response.MaintenanceId }, response);
+            return CreatedAtAction(nameof(GetMaintenanceById), new { maintenanceId = response.MaintenanceId }, response);
         }
 
         /// <summary>
         /// Updates an existing maintenance record with the specified identifier and details.
         /// </summary>
-        /// <param name="id">The unique identifier of the maintenance record to update.</param>
+        /// <param name="maintenanceId">The unique identifier of the maintenance record to update.</param>
         /// <param name="request">The updated maintenance details.</param>
         /// <returns>An <see cref="IActionResult"/> containing the updated maintenance record.</returns>
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateMaintenance(Guid id, [FromBody] UpdateMaintenanceRequest request)
+        [HttpPatch("{maintenanceId}")]
+        public async Task<IActionResult> UpdateMaintenance(Guid maintenanceId, [FromBody] UpdateMaintenanceRequest request)
         {
             if (request == null)
             {
                 return BadRequest("Maintenance cannot be null.");
             }
 
-            MaintenanceDtoResponse response = await _maintenanceService.UpdateMaintenanceAsync(id, request);
+            MaintenanceDtoResponse response = await _maintenanceService.UpdateMaintenanceAsync(maintenanceId, request);
 
             return Ok(response);
         }
@@ -99,12 +99,12 @@ namespace OficinaMotorcycle.API.Controllers
         /// <summary>
         /// Deletes a maintenance record by its unique identifier.
         /// </summary>
-        /// <param name="id">The unique identifier of the maintenance record to delete.</param>
+        /// <param name="maintenanceId">The unique identifier of the maintenance record to delete.</param>
         /// <returns>An <see cref="IActionResult"/> indicating the success or failure of the deletion.</returns>
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMaintenance(Guid id)
+        [HttpDelete("{maintenanceId}")]
+        public async Task<IActionResult> DeleteMaintenance(Guid maintenanceId)
         {
-            bool success = await _maintenanceService.DeleteMaintenanceAsync(id);
+            bool success = await _maintenanceService.DeleteMaintenanceAsync(maintenanceId);
             if (!success)
             {
                 return NotFound();

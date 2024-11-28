@@ -2,9 +2,12 @@
 using Microsoft.Extensions.Logging;
 using OficinaMotocenter.Application.Dto.Requests.Maintenance;
 using OficinaMotocenter.Application.Dto.Responses.Maintenance;
+using OficinaMotocenter.Application.Dto.Responses.Motorcycle;
+using OficinaMotocenter.Application.Dto.Responses.Team;
 using OficinaMotocenter.Application.Exceptions;
 using OficinaMotocenter.Application.Interfaces.Services;
 using OficinaMotocenter.Domain.Entities;
+using OficinaMotocenter.Domain.Entities.Enumerations;
 using OficinaMotocenter.Domain.Interfaces.Repositories;
 using OficinaMotocenter.Domain.Interfaces.UnitOfWork;
 
@@ -19,6 +22,8 @@ namespace OficinaMotocenter.Application.Services
         private readonly ILogger _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
+        private readonly ITeamService _teamService;
+        private readonly IMotorcycleService _motorcycleService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MaintenanceService"/> class.
@@ -30,13 +35,17 @@ namespace OficinaMotocenter.Application.Services
         public MaintenanceService(IMaintenanceRepository maintenanceRepository,
                                   ILogger<MaintenanceService> logger,
                                   IUnitOfWork unitOfWork,
-                                  IMapper mapper)
+                                  IMapper mapper,
+                                  ITeamService teamService,
+                                  IMotorcycleService motorcycleService)
                                   : base(maintenanceRepository, unitOfWork, logger)
         {
             _maintenanceRepository = maintenanceRepository;
             _logger = logger;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _teamService = teamService;
+            _motorcycleService = motorcycleService;
         }
 
         /// <summary>
@@ -46,7 +55,22 @@ namespace OficinaMotocenter.Application.Services
         /// <returns>A <see cref="MaintenanceDtoResponse"/> containing details of the newly created maintenance.</returns>
         public async Task<MaintenanceDtoResponse> CreateMaintenanceAsync(CreateMaintenanceRequest request)
         {
+            GetMotorcycleByIdResponse existentMotorcycle = await _motorcycleService.GetMotorcycleByIdAsync(request.MotorcycleId);
+            
+            if (existentMotorcycle == null)
+            {
+                throw new InvalidArgumentException("Motorcycle not found");
+            }
+
+            TeamDtoResponse existentTeam = await _teamService.GetTeamByIdAsync(request.TeamId);
+            
+            if(existentTeam == null)
+            {
+                throw new InvalidArgumentException("Team not found");
+            }
+
             Maintenance newMaintenance = _mapper.Map<Maintenance>(request);
+            newMaintenance.MaintenanceStatus = MaintenanceStatus.Started;
             Maintenance createdMaintenance = await CreateAsync(newMaintenance);
             return _mapper.Map<MaintenanceDtoResponse>(createdMaintenance);
         }
@@ -54,12 +78,12 @@ namespace OficinaMotocenter.Application.Services
         /// <summary>
         /// Updates an existing maintenance record based on the specified ID and update details.
         /// </summary>
-        /// <param name="id">Unique identifier of the maintenance to update.</param>
+        /// <param name="maintenanceId">Unique identifier of the maintenance to update.</param>
         /// <param name="request">Updated maintenance details.</param>
         /// <returns>A <see cref="MaintenanceDtoResponse"/> containing updated maintenance information.</returns>
-        public async Task<MaintenanceDtoResponse> UpdateMaintenanceAsync(Guid id, UpdateMaintenanceRequest request)
+        public async Task<MaintenanceDtoResponse> UpdateMaintenanceAsync(Guid maintenanceId, UpdateMaintenanceRequest request)
         {
-            Maintenance maintenanceToUpdate = await GetByIdAsync(id);
+            Maintenance maintenanceToUpdate = await GetByIdAsync(maintenanceId);
 
             if (maintenanceToUpdate == null)
             {
@@ -68,7 +92,8 @@ namespace OficinaMotocenter.Application.Services
 
             _mapper.Map(request, maintenanceToUpdate);
             await UpdateAsync(maintenanceToUpdate);
-            return _mapper.Map<MaintenanceDtoResponse>(maintenanceToUpdate);
+            MaintenanceDtoResponse response = await GetMaintenanceByIdAsync(maintenanceId);
+            return response;
         }
 
         /// <summary>
@@ -79,7 +104,16 @@ namespace OficinaMotocenter.Application.Services
         public async Task<MaintenanceDtoResponse> GetMaintenanceByIdAsync(Guid maintenanceId)
         {
             Maintenance maintenance = await GetByIdAsync(maintenanceId);
-            return _mapper.Map<MaintenanceDtoResponse>(maintenance);
+            MaintenanceDtoResponse response = _mapper.Map<MaintenanceDtoResponse>(maintenance);
+
+            GetMotorcycleByIdResponse motorcycleDto = await _motorcycleService.GetMotorcycleByIdAsync(maintenance.MotorcycleId);
+            TeamDtoResponse teamDto = await _teamService.GetTeamByIdAsync(maintenance.TeamId);
+
+            response.MotorcycleName = motorcycleDto.Name;
+            response.MotorcyclePlate = motorcycleDto.Plate;
+            response.TeamName = teamDto.Name;
+
+            return response;
         }
 
         /// <summary>
@@ -100,6 +134,15 @@ namespace OficinaMotocenter.Application.Services
             );
 
             GetListMaintenanceResponse response = _mapper.Map<GetListMaintenanceResponse>(maintenanceList);
+            foreach(MaintenanceDtoResponse maintenanceDto in response.Maintenances)
+            {
+                GetMotorcycleByIdResponse motorcycleDto = await _motorcycleService.GetMotorcycleByIdAsync(maintenanceDto.MotorcycleId);
+                TeamDtoResponse teamDto = await _teamService.GetTeamByIdAsync(maintenanceDto.TeamId);
+
+                maintenanceDto.MotorcycleName = motorcycleDto.Name;
+                maintenanceDto.MotorcyclePlate = motorcycleDto.Plate;
+                maintenanceDto.TeamName = teamDto.Name;
+            }
             response.TotalCount = maintenanceList.Count;
             return response;
         }
@@ -114,5 +157,17 @@ namespace OficinaMotocenter.Application.Services
             bool maintenanceDeleted = await base.DeleteAsync(maintenanceId);
             return maintenanceDeleted;
         }
+
+        //private async Task<GetMotorcycleByIdResponse> GetMotorcycleInformation(Guid motorcycleId)
+        //{
+        //    GetMotorcycleByIdResponse motorcycleDto = await _motorcycleService.GetMotorcycleByIdAsync(motorcycleId);
+        //    return motorcycleDto;
+        //}
+
+        //private async Task<TeamDtoResponse> GetTeamInformation(Guid teamId)
+        //{
+        //    TeamDtoResponse teamDto = await _teamService.GetTeamByIdAsync(teamId);
+        //    return teamDto;
+        //}
     }
 }

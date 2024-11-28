@@ -8,10 +8,6 @@ namespace OficinaMotocenter.Application.Dto.Requests.Maintenance
     /// </summary>
     public class CreateMaintenanceRequest
     {
-        /// <summary>
-        /// Gets or sets the status of the maintenance.
-        /// </summary>
-        public MaintenanceStatus MaintenanceStatus { get; set; }
 
         /// <summary>
         /// Gets or sets a description of the maintenance.
