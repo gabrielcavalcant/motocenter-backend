@@ -5,7 +5,7 @@ namespace OficinaMotocenter.Application.Dto.Responses.Motorcycle
     /// <summary>
     /// DTO for retrieving a single motorcycle by its unique identifier.
     /// </summary>
-    public class GetMotorcycleByIdResponse
+    public class MotorcycleDtoResponse
     {
         /// <summary>
         /// The unique identifier of the motorcycle.
@@ -31,5 +31,10 @@ namespace OficinaMotocenter.Application.Dto.Responses.Motorcycle
         /// The year the motorcycle was manufactured.
         /// </summary>
         public int YearManufacture { get; set; }
+
+        /// <summary>
+        /// The year the motorcycle was manufactured.
+        /// </summary>
+        public string CustomerCpf { get; set; }
     }
 }

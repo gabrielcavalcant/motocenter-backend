@@ -15,14 +15,14 @@ namespace OficinaMotocenter.Application.Interfaces.Services
         /// </summary>
         /// <param name="request">The request DTO containing motorcycle information.</param>
         /// <returns>A response DTO with the details of the created motorcycle.</returns>
-        Task<CreateMotorcycleResponse> CreateMotorcycleAsync(CreateMotorcycleRequest request);
+        Task<MotorcycleDtoResponse> CreateMotorcycleAsync(CreateMotorcycleRequest request);
 
         /// <summary>
         /// Executes the retrieval of a motorcycle by its ID.
         /// </summary>
         /// <param name="motorcycleId">The unique ID of the motorcycle to retrieve.</param>
         /// <returns>A response DTO with the details of the motorcycle.</returns>
-        Task<GetMotorcycleByIdResponse> GetMotorcycleByIdAsync(Guid motorcycleId);
+        Task<MotorcycleDtoResponse> GetMotorcycleByIdAsync(Guid motorcycleId);
 
         /// <summary>
         /// Executes the retrieval of all motorcycles with optional filtering.
@@ -38,7 +38,7 @@ namespace OficinaMotocenter.Application.Interfaces.Services
         /// <param name="motorcycleId">The unique ID of the motorcycle to update.</param>
         /// <param name="request">The request DTO containing the updated information.</param>
         /// <returns>A response DTO with the details of the updated motorcycle.</returns>
-        Task<UpdateMotorcycleResponse> UpdateMotorcycleAsync(Guid motorcycleId, UpdateMotorcycleRequest request);
+        Task<MotorcycleDtoResponse> UpdateMotorcycleAsync(Guid motorcycleId, UpdateMotorcycleRequest request);
 
         /// <summary>
         /// Executes the deletion of a motorcycle by its ID.

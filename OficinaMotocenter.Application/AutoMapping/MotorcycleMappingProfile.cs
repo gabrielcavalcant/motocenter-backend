@@ -20,14 +20,7 @@ namespace OficinaMotocenter.Application.AutoMapping
             // Map LinkMotorcycleToCustomerRequest to Motorcycle (for linking to a customer)
             CreateMap<LinkMotorcycleToCustomerRequest, Motorcycle>();
 
-            // Map Motorcycle to CreateMotorcycleResponse
-            CreateMap<Motorcycle, CreateMotorcycleResponse>();
-            CreateMap<Motorcycle, GetMotorcycleByIdResponse>();
-            CreateMap<Motorcycle, UpdateMotorcycleResponse>();
-            CreateMap<Motorcycle, LinkMotorcycleToCustomerResponse>();
-
-            // Map Motorcycle to MotorcycleDto (for use in paginated responses)
-            CreateMap<Motorcycle, MotorcycleDto>();
+            CreateMap<Motorcycle, MotorcycleDtoResponse>();
 
             // Optional: Mapping for paginated responses if needed
             CreateMap<List<Motorcycle>, GetListMotorcycleResponse>()

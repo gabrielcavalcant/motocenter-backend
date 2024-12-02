@@ -17,7 +17,9 @@ namespace OficinaMotocenter.Application.AutoMapping
 
             // Mapeamento de UpdateMaintenanceRequest para Maintenance
             CreateMap<UpdateMaintenanceRequest, Maintenance>()
-               .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+                .ForMember(dest => dest.MaintenanceStatus, opt =>
+                    opt.Condition(src => src.MaintenanceStatus.HasValue)) // Mapeia apenas se houver valor
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
             // Map Maintenance to MaintenanceDto (for use in paginated responses)
             CreateMap<Maintenance, MaintenanceDtoResponse>();

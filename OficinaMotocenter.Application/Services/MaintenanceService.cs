@@ -55,7 +55,7 @@ namespace OficinaMotocenter.Application.Services
         /// <returns>A <see cref="MaintenanceDtoResponse"/> containing details of the newly created maintenance.</returns>
         public async Task<MaintenanceDtoResponse> CreateMaintenanceAsync(CreateMaintenanceRequest request)
         {
-            GetMotorcycleByIdResponse existentMotorcycle = await _motorcycleService.GetMotorcycleByIdAsync(request.MotorcycleId);
+            MotorcycleDtoResponse existentMotorcycle = await _motorcycleService.GetMotorcycleByIdAsync(request.MotorcycleId);
             
             if (existentMotorcycle == null)
             {
@@ -90,9 +90,18 @@ namespace OficinaMotocenter.Application.Services
                 throw new InvalidArgumentException("Maintenance record not found");
             }
 
-            _mapper.Map(request, maintenanceToUpdate);
-            await UpdateAsync(maintenanceToUpdate);
-            MaintenanceDtoResponse response = await GetMaintenanceByIdAsync(maintenanceId);
+            if (request.MaintenanceStatus.HasValue)
+            {
+                maintenanceToUpdate.MaintenanceStatus = request.MaintenanceStatus.Value;
+            }
+
+            if (request.Description != null)
+            {
+                maintenanceToUpdate.Description = request.Description;
+            }
+
+            Maintenance maintenance =  await UpdateAsync(maintenanceToUpdate);
+            MaintenanceDtoResponse response = await GetMaintenanceByIdAsync(maintenance.MaintenanceId);
             return response;
         }
 
@@ -106,7 +115,7 @@ namespace OficinaMotocenter.Application.Services
             Maintenance maintenance = await GetByIdAsync(maintenanceId);
             MaintenanceDtoResponse response = _mapper.Map<MaintenanceDtoResponse>(maintenance);
 
-            GetMotorcycleByIdResponse motorcycleDto = await _motorcycleService.GetMotorcycleByIdAsync(maintenance.MotorcycleId);
+            MotorcycleDtoResponse motorcycleDto = await _motorcycleService.GetMotorcycleByIdAsync(maintenance.MotorcycleId);
             TeamDtoResponse teamDto = await _teamService.GetTeamByIdAsync(maintenance.TeamId);
 
             response.MotorcycleName = motorcycleDto.Name;
@@ -136,7 +145,7 @@ namespace OficinaMotocenter.Application.Services
             GetListMaintenanceResponse response = _mapper.Map<GetListMaintenanceResponse>(maintenanceList);
             foreach(MaintenanceDtoResponse maintenanceDto in response.Maintenances)
             {
-                GetMotorcycleByIdResponse motorcycleDto = await _motorcycleService.GetMotorcycleByIdAsync(maintenanceDto.MotorcycleId);
+                MotorcycleDtoResponse motorcycleDto = await _motorcycleService.GetMotorcycleByIdAsync(maintenanceDto.MotorcycleId);
                 TeamDtoResponse teamDto = await _teamService.GetTeamByIdAsync(maintenanceDto.TeamId);
 
                 maintenanceDto.MotorcycleName = motorcycleDto.Name;
@@ -157,17 +166,5 @@ namespace OficinaMotocenter.Application.Services
             bool maintenanceDeleted = await base.DeleteAsync(maintenanceId);
             return maintenanceDeleted;
         }
-
-        //private async Task<GetMotorcycleByIdResponse> GetMotorcycleInformation(Guid motorcycleId)
-        //{
-        //    GetMotorcycleByIdResponse motorcycleDto = await _motorcycleService.GetMotorcycleByIdAsync(motorcycleId);
-        //    return motorcycleDto;
-        //}
-
-        //private async Task<TeamDtoResponse> GetTeamInformation(Guid teamId)
-        //{
-        //    TeamDtoResponse teamDto = await _teamService.GetTeamByIdAsync(teamId);
-        //    return teamDto;
-        //}
     }
 }

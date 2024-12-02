@@ -9,7 +9,7 @@
         /// <summary>
         /// A list of motorcycles for the current page.
         /// </summary>
-        public List<MotorcycleDto> Motorcycles { get; set; }
+        public List<MotorcycleDtoResponse> Motorcycles { get; set; }
     }
 
     /// <summary>
