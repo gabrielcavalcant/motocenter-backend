@@ -21,6 +21,12 @@ namespace OficinaMotocenter.Application.Dto.Requests.User
         public string Email { get; set; }
 
         /// <summary>
+        /// Gets or sets the password of the user.
+        /// </summary>
+        [Required(ErrorMessage = "A senha do usuário é obrigatória.")]
+        public string Hash { get; set; }
+
+        /// <summary>
         /// Gets or sets the full name of the user.
         /// </summary>
         [Required(ErrorMessage = "O nome completo é obrigatório.")]

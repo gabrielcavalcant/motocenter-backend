@@ -28,5 +28,7 @@ namespace OficinaMotocenter.Application.Interfaces.Services
         /// <param name="signUp">The sign-up request containing user registration details.</param>
         /// <returns>A <see cref="Tokens"/> object with access and refresh tokens, or null if registration fails.</returns>
         Task<Tokens> SignUpAsync(SignUpRequest signUp);
+
+        string HashPassword(string password);
     }
 }
