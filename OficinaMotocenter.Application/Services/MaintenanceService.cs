@@ -70,7 +70,7 @@ namespace OficinaMotocenter.Application.Services
             }
 
             Maintenance newMaintenance = _mapper.Map<Maintenance>(request);
-            newMaintenance.MaintenanceStatus = MaintenanceStatus.Started;
+            newMaintenance.MaintenanceStatus = MaintenanceStatus.Created;
             Maintenance createdMaintenance = await CreateAsync(newMaintenance);
             return _mapper.Map<MaintenanceDtoResponse>(createdMaintenance);
         }

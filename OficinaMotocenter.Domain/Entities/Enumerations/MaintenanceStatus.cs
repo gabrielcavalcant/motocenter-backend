@@ -11,18 +11,13 @@
         Created = 1,
 
         /// <summary>
-        /// Started.
-        /// </summary>
-        Started = 2,
-
-        /// <summary>
         /// InProgress.
         /// </summary>
-        InProgress = 3,
+        InProgress = 2,
 
         /// <summary>
         /// Done.
         /// </summary>
-        Done = 4,
+        Done = 3,
     }
 }

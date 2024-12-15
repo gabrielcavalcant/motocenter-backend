@@ -11,7 +11,7 @@ namespace OficinaMotorcycle.API.Controllers
     /// </summary>
     [ApiController]
     [Route("api/maintenance")]
-    [Authorize]
+    //[Authorize]
     public class MaintenanceController : ControllerBase
     {
         private readonly IMaintenanceService _maintenanceService;
