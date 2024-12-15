@@ -56,6 +56,9 @@ namespace OficinaMotocenter.Persistence.Context
         /// </summary>
         public DbSet<Item> Items { get; set; }
 
+        /// Gets or sets the <see cref="DbSet{TEntity}"/> for the <see cref="Maintenance"/> entity.
+        /// </summary>
+        public DbSet<Maintenance> Maintenances { get; set; }
 
         /// <summary>
         /// Configures the Entity Framework model when creating the entities in the database.
@@ -73,7 +76,9 @@ namespace OficinaMotocenter.Persistence.Context
             builder.ApplyConfiguration(new TeamConfiguration());
             builder.ApplyConfiguration(new TeamMemberConfiguration());
             builder.ApplyConfiguration(new ItemConfiguration());
+            builder.ApplyConfiguration(new MaintenanceConfiguration());
             
+
             base.OnModelCreating(builder);
             //Add other configurations
         }

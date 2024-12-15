@@ -35,11 +35,11 @@ namespace OficinaMotocenter.Domain.Entities
         /// <summary>
         /// Gets or sets the customer identifier associated with the motorcycle, if applicable.
         /// </summary>
-        public Guid? CustomerId { get; set; }
+        public Guid CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the customer associated with the motorcycle.
         /// </summary>
-        public Customer? Customer { get; set; }
+        public Customer Customer { get; set; }
     }
 }

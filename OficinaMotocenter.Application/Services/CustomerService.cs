@@ -6,6 +6,7 @@ using AutoMapper;
 using OficinaMotocenter.Application.Dto.Responses.Customer;
 using OficinaMotocenter.Application.Dto.Requests.Customer;
 using OficinaMotocenter.Domain.Interfaces.UnitOfWork;
+using OficinaMotocenter.Application.Exceptions;
 
 namespace OficinaMotocenter.Application.Services
 {
@@ -69,6 +70,10 @@ namespace OficinaMotocenter.Application.Services
         {
             _logger.LogInformation("Searching customer using GUID: {@id}", customerId);
             Customer customer = await base.GetByIdAsync(customerId);
+            if(customer == null)
+            {
+                throw new InvalidArgumentException("Customer not found");
+            }
             return _mapper.Map<GetCustomerByIdResponse>(customer);
         }
 

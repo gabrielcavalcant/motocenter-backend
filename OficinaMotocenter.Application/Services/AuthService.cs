@@ -147,7 +147,7 @@ namespace OficinaMotocenter.Application.Services
         /// </summary>
         /// <param name="password">The password to be hashed.</param>
         /// <returns>A hashed string representation of the password.</returns>
-        private string HashPassword(string password)
+        public string HashPassword(string password)
         {
             using (SHA256 sha256 = SHA256.Create())
             {

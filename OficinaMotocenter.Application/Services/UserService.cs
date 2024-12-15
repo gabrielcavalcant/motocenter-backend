@@ -19,16 +19,19 @@ namespace OficinaMotocenter.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly ILogger<UserService> _logger;
         private readonly IMapper _mapper;
+        private readonly IAuthService _authService;
 
         public UserService(IUserRepository userRepository,
                            IUnitOfWork unitOfWork,
                            ILogger<UserService> logger,
-                           IMapper mapper) : base(userRepository, unitOfWork, logger)
+                           IMapper mapper,
+                           IAuthService authService) : base(userRepository, unitOfWork, logger)
         {
             _userRepository = userRepository;
             _unitOfWork = unitOfWork;
             _logger = logger;
             _mapper = mapper;
+            _authService = authService;
         }
 
         /// <summary>
@@ -39,6 +42,7 @@ namespace OficinaMotocenter.Application.Services
         public async Task<UserDtoResponse> CreateUserAsync(CreateUserRequest request)
         {
             User newUser = _mapper.Map<User>(request);
+            newUser.Hash = _authService.HashPassword(request.Hash);
             User createdUser = await CreateAsync(newUser);
             return _mapper.Map<UserDtoResponse>(createdUser);
         }

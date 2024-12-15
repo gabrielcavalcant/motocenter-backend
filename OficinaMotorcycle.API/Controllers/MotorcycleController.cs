@@ -43,7 +43,7 @@ namespace OficinaMotorcycle.API.Controllers
             {
                 _logger.LogInformation("Request initiated");
 
-                CreateMotorcycleResponse response = await _motorcycleService.CreateMotorcycleAsync(request);
+                MotorcycleDtoResponse response = await _motorcycleService.CreateMotorcycleAsync(request);
 
                 _logger.LogInformation("Response: {@response}", response);
                 return CreatedAtAction(nameof(Get), new { id = response.MotorcycleId }, response);
@@ -75,7 +75,7 @@ namespace OficinaMotorcycle.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
-            GetMotorcycleByIdResponse response = await _motorcycleService.GetMotorcycleByIdAsync(id);
+            MotorcycleDtoResponse response = await _motorcycleService.GetMotorcycleByIdAsync(id);
 
             if (response == null)
                 return NotFound();
@@ -108,7 +108,7 @@ namespace OficinaMotorcycle.API.Controllers
         [HttpPut("{motorcycleId}")]
         public async Task<IActionResult> Put(Guid motorcycleId, [FromBody] UpdateMotorcycleRequest request )
         {
-            UpdateMotorcycleResponse response = await _motorcycleService.UpdateMotorcycleAsync(motorcycleId, request);
+            MotorcycleDtoResponse response = await _motorcycleService.UpdateMotorcycleAsync(motorcycleId, request);
             return Ok(response);
         }
 

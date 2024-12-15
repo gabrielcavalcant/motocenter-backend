@@ -7,6 +7,7 @@ using OficinaMotocenter.Application.Dto.Responses.Motorcycle;
 using AutoMapper;
 using OficinaMotocenter.Domain.Interfaces.UnitOfWork;
 using OficinaMotocenter.Application.Exceptions;
+using OficinaMotocenter.Application.Dto.Responses.Customer;
 
 
 namespace OficinaMotocenter.Application.Services
@@ -51,7 +52,7 @@ namespace OficinaMotocenter.Application.Services
         /// </summary>
         /// <param name="request">The request DTO containing motorcycle information.</param>
         /// <returns>A response DTO with the details of the created motorcycle.</returns>
-        public async Task<CreateMotorcycleResponse> CreateMotorcycleAsync(CreateMotorcycleRequest request)
+        public async Task<MotorcycleDtoResponse> CreateMotorcycleAsync(CreateMotorcycleRequest request)
         {
             Customer customer = await _customerService.GetCustomerByCpfAsync(request.CustomerCpf);
 
@@ -66,7 +67,7 @@ namespace OficinaMotocenter.Application.Services
 
             _logger.LogInformation("Creating motorcycle: {@motorcycle}", motorcycle);
             Motorcycle createdMotorcycle = await base.CreateAsync(motorcycle);
-            return _mapper.Map<CreateMotorcycleResponse>(createdMotorcycle);
+            return _mapper.Map<MotorcycleDtoResponse>(createdMotorcycle);
         }
 
         /// <summary>
@@ -74,11 +75,11 @@ namespace OficinaMotocenter.Application.Services
         /// </summary>
         /// <param name="motorcycleId">The unique ID of the motorcycle to retrieve.</param>
         /// <returns>A response DTO with the details of the motorcycle.</returns>
-        public async Task<GetMotorcycleByIdResponse> GetMotorcycleByIdAsync(Guid motorcycleId)
+        public async Task<MotorcycleDtoResponse> GetMotorcycleByIdAsync(Guid motorcycleId)
         {
             _logger.LogInformation("Searching motorcycle using GUID: {@id}", motorcycleId);
             Motorcycle motorcycle = await base.GetByIdAsync(motorcycleId);
-            return _mapper.Map<GetMotorcycleByIdResponse>(motorcycle);
+            return _mapper.Map<MotorcycleDtoResponse>(motorcycle);
         }
 
         /// <summary>
@@ -100,6 +101,10 @@ namespace OficinaMotocenter.Application.Services
             );
 
             GetListMotorcycleResponse response = _mapper.Map<GetListMotorcycleResponse>(motorcycleList);
+            foreach(MotorcycleDtoResponse motorcycleDto in response.Motorcycles) 
+            {
+                motorcycleDto.CustomerCpf = await GetCustomerCpfByMotorcycleId(motorcycleDto.MotorcycleId);
+            }
             response.TotalCount = motorcycleList.Count;
             return response;
         }
@@ -110,12 +115,12 @@ namespace OficinaMotocenter.Application.Services
         /// <param name="motorcycleId">Motorcycle Id</param>
         /// <param name="request">The request DTO containing motorcycle information.</param>
         /// <returns>A response DTO with the details of the updated motorcycle.</returns>
-        public async Task<UpdateMotorcycleResponse> UpdateMotorcycleAsync(Guid motorcycleId, UpdateMotorcycleRequest request)
+        public async Task<MotorcycleDtoResponse> UpdateMotorcycleAsync(Guid motorcycleId, UpdateMotorcycleRequest request)
         {
             Motorcycle motorcycle = await base.GetByIdAsync(motorcycleId);
             _mapper.Map(request, motorcycle);
             Motorcycle updatedMotorcycle = await base.UpdateAsync(motorcycle);
-            UpdateMotorcycleResponse response = _mapper.Map<UpdateMotorcycleResponse>(updatedMotorcycle);
+            MotorcycleDtoResponse response = _mapper.Map<MotorcycleDtoResponse>(updatedMotorcycle);
             return response;
         }
 
@@ -128,6 +133,14 @@ namespace OficinaMotocenter.Application.Services
         {
             bool motorcycleDeleted = await base.DeleteAsync(motorcycleId);
             return motorcycleDeleted;
+        }
+
+        private async Task<string> GetCustomerCpfByMotorcycleId(Guid motorcycleId)
+        {
+            Motorcycle motorcycle = await _motorcycleRepository.GetByIdAsync(motorcycleId);
+            GetCustomerByIdResponse customerDto = await _customerService.GetCustomerByIdAsync(motorcycle.CustomerId);
+            string customerCpf = customerDto.Cpf;
+            return customerCpf;
         }
     }
 }
